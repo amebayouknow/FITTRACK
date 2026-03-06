@@ -1,26 +1,96 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@theme {
+  /* Цвета фона */
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Цвета текста */
+  --color-stone: #fafaf9; /* stone-50 */
+  --color-main: #e7e5e4; /* stone-100 */
+  --color-secondary: #78716c; /* stone-500 */
+  --color-primary: #0c0a09; /* stone-950 */
+  --color-accent: #f97316; /* orange-600 */
+  --color-warning: #dc2626; /* red-600 */
+  --color-lime: #84cc16; /* lime-500 */
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-main);
+  color: var(--color-primary);
+  font-family: var(--font-montserrat), 'Montserrat Alternates', sans-serif;
 }
+
+/* Тени */
+.shadow-custom {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+/* Размеры текста */
+.text-xs {
+  font-size: 12px;
+  line-height: 100%;
+  font-weight: 400;
+}
+
+.text-sm {
+  font-size: 14px;
+  line-height: 100%;
+  font-weight: 400;
+}
+
+.text-base {
+  font-size: 16px;
+  line-height: 100%;
+  font-weight: 400;
+}
+
+.text-lg {
+  font-size: 18px;
+  line-height: 100%;
+  font-weight: 400;
+}
+
+.text-xl {
+  font-size: 20px;
+  line-height: 100%;
+  font-weight: 400;
+}
+
+.text-2xl {
+  font-size: 24px;
+  line-height: 100%;
+  font-weight: 700;
+}
+
+.text-3xl {
+  font-size: 30px;
+  line-height: 100%;
+  font-weight: 700;
+}
+
+.text-4xl {
+  font-size: 36px;
+  line-height: 100%;
+  font-weight: 700;
+}
+
+.text-5xl {
+  font-size: 48px;
+  line-height: 100%;
+  font-weight: 800;
+}
+
+/* Дополнительные утилиты */
+.container-custom {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+}
+

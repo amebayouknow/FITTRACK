@@ -1,0 +1,32 @@
+.nav {
+    height: 20px;
+    width: 100%;
+    position: relative;
+}
+
+.nav li {
+    text-decoration: underline transparent;
+    transition: all 0.3s;
+    text-underline-offset: 25%;
+    text-decoration-thickness: 12.5%;
+}
+
+.nav ul {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+    padding: 0;
+    z-index: 1;
+    white-space: nowrap; 
+}
+
+.nav h1 {
+    flex: 0 0 auto;
+    z-index: 2;
+}
+
+.nav li:hover {
+    text-decoration-color: #f97316;
+    color: #f97316;
+}
