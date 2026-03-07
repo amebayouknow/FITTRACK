@@ -6,7 +6,7 @@ import WorkoutsTable from "./_components/WorkoutTable";
 
 export default function HomePage() {
     return (
-        <div className=" px-2 py-9">
+        <div className="min-h-screen px-2 py-9">
             <div className="max-w-xs mx-auto">
                 <div className="px-2 py-4 text-center">
                     <h1 className="text-2xl">

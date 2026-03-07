@@ -1,13 +1,20 @@
+"use client";
+
 import React from 'react';
+import Link from 'next/link';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     text: string;
-    variant?: 'primary' | 'secondary' | 'outline';
+    variant?: 'primary' | 'secondary' | 'outline' | 'text';
+    href?: string; 
+    target?: string;
 }
 
 export default function Button({
     text,
     variant = "primary",
+    href,
+    target,
     onClick,
     disabled,
     type = "button",
@@ -27,6 +34,8 @@ export default function Button({
         fontWeight: 400,
         boxShadow: '0 4px 10px rgba(0, 0, 0, 0.4)',
         padding: '16px 48px',
+        textDecoration: 'none',
+        width: '100%',
     };
 
     const variantStyles = {
@@ -44,6 +53,14 @@ export default function Button({
             border: '3px solid var(--color-accent)',
             fontWeight: 700,  
         },
+        text: {
+            backgroundColor: 'transparent',
+            color: 'var(--color-secondary)',
+            border: 'none',
+            boxShadow:'none',
+            padding: '0',
+            fontWeight: 400,  
+        },
     };
 
     const variantKey = variant as keyof typeof variantStyles;
@@ -53,6 +70,32 @@ export default function Button({
         ...variantStyles[variantKey],
     };
 
+    const handleMouseEnter = (e: React.MouseEvent<HTMLElement>) => {
+        if (disabled) return;
+        e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)';
+    };
+
+    const handleMouseLeave = (e: React.MouseEvent<HTMLElement>) => {
+        if (disabled) return;
+        e.currentTarget.style.transform = 'none';
+    };
+
+    if (href) {
+        return (
+            <Link 
+                href={href}
+                target={target}
+                className={`inline-block ${className}`}
+                style={buttonStyles}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+                {...props as any}
+            >
+                {text}
+            </Link>
+        );
+    }
+
     return (
         <button
             type={type}
@@ -60,14 +103,8 @@ export default function Button({
             disabled={disabled}
             style={buttonStyles}
             className={`button-component ${className}`}
-            onMouseEnter={(e) => {
-                if (disabled) return;
-                e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)';
-            }}
-            onMouseLeave={(e) => {
-                if (disabled) return;
-                e.currentTarget.style.transform = 'none';
-            }}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
             {...props}
         >
             {text}
