@@ -8,12 +8,12 @@ interface TableRowProps {
 }
 
 export default function TableRow({ data, type = 'workout' }: TableRowProps) {
-  const baseClasses = "grid grid-cols-3 px-3 py-3 rounded-[16px] mb-2 shadow";
+  const baseClasses = "flex justify-between px-5 py-4 mb-2 rounded-[16px] text-sm";
   
   if (type === 'workout') {
     const workoutData = data as WorkoutData;
     return (
-      <div className={`${baseClasses} bg-stone`}>
+      <div className={`${baseClasses} bg-stone text-black`}>
         <span>{workoutData.date}</span>
         <span>{workoutData.time}</span>
         <span>{workoutData.exercises}</span>
@@ -24,7 +24,7 @@ export default function TableRow({ data, type = 'workout' }: TableRowProps) {
   if (type === 'workout-alt') {
     const workoutData = data as WorkoutData;
     return (
-      <div className={`${baseClasses} bg-main`}>
+      <div className={`${baseClasses} bg-[#e5e7eb] text-[#212529]`}>
         <span>{workoutData.date}</span>
         <span>{workoutData.time}</span>
         <span>{workoutData.exercises}</span>
@@ -35,7 +35,7 @@ export default function TableRow({ data, type = 'workout' }: TableRowProps) {
   if (type === 'stat') {
     const statData = data as StatData;
     return (
-      <div className={`${baseClasses} bg-stone`}>
+      <div className={`${baseClasses} bg-stone text-black`}>
         <span>{statData.type}</span>
         <span>{statData.time}</span>
         <span>{statData.count}</span>

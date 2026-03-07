@@ -21,8 +21,11 @@ body {
 }
 
 /* Тени */
-.shadow-custom {
+.shadow {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+.shadow-custom{
+  box-shadow: 0 0 20px 10px rgba(249,115,22,0.25);
 }
 
 /* Размеры текста */
@@ -82,7 +85,7 @@ body {
 
 /* Дополнительные утилиты */
 .container-custom {
-  max-width: 1200px;
+  max-width: 320px;
   margin: 0 auto;
   padding: 0 20px;
 }
@@ -94,3 +97,7 @@ body {
   
 }
 
+.wrapper{
+  width: 100%;
+  margin: 0 auto;
+}
