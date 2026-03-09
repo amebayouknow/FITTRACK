@@ -46,8 +46,7 @@ export default function ComparisonChart({
   ].join(' ');
 
   return (
-    <div className="w-full p-2">
-      {/* Легенда */}
+    <div className="w-full">
       <div className="flex justify-end gap-4 mb-3 text-xs">
         <div className="flex items-center gap-1">
           <div className="w-3 h-3 rounded-full" style={{ background: '#ffffff' }}></div>
@@ -60,7 +59,6 @@ export default function ComparisonChart({
       </div>
 
       <div className="relative" style={{ height: '240px' }}>
-        {/* ГРАДИЕНТНЫЙ ФОН - оранжевый снизу, белый сверху */}
         <div 
           className="absolute inset-0 rounded-lg"
           style={{
@@ -68,9 +66,7 @@ export default function ComparisonChart({
           }}
         ></div>
 
-        {/* Фоновая разметка */}
         <div className="absolute inset-0">
-          {/* Горизонтальные линии сетки */}
           {[30, 80, 130, 180].map((y, i) => (
             <div
               key={i}
@@ -84,7 +80,6 @@ export default function ComparisonChart({
             />
           ))}
           
-          {/* Вертикальные линии сетки */}
           {[20, 60, 100, 140, 180].map((x, i) => (
             <div
               key={`v-${i}`}
@@ -98,7 +93,6 @@ export default function ComparisonChart({
             />
           ))}
           
-          {/* Значения по вертикали */}
           <div className="absolute left-1 top-0 bottom-0 w-6 text-[10px] font-medium"
                style={{ color: '#ffff' }}>
             <span className="absolute" style={{ top: '25px', right: '5px' }}>{maxValue}</span>
@@ -109,9 +103,7 @@ export default function ComparisonChart({
           </div>
         </div>
 
-        {/* SVG с графиком */}
         <svg width="100%" height="240" viewBox="0 0 220 240" className="absolute top-0 left-0 z-10">
-          {/* Градиент для заливки под текущей линией */}
           <defs>
             <linearGradient id="fillGradient" x1="0%" y1="0%" x2="0%" y2="100%">
               <stop offset="0%" stopColor="white" stopOpacity="0.9" />
@@ -121,14 +113,12 @@ export default function ComparisonChart({
             </linearGradient>
           </defs>
           
-          {/* Заливка под текущей линией */}
           <polygon
             points={fillPoints}
             fill="url(#fillGradient)"
             stroke="none"
           />
           
-          {/* Линия предыдущего периода (пунктирная) */}
           <polyline
             points={previousPoints}
             fill="none"
@@ -139,7 +129,6 @@ export default function ComparisonChart({
             strokeLinejoin="round"
           />
           
-          {/* Основная линия текущего периода (без точек) */}
           <polyline
             points={currentPoints}
             fill="none"
@@ -151,7 +140,6 @@ export default function ComparisonChart({
         </svg>
       </div>
       
-      {/* Подписи снизу */}
       <div className="flex justify-between mt-4 px-2 relative z-20">
         {labels.map((label, i) => (
           <span 

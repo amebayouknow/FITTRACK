@@ -94,11 +94,10 @@ export default function MultiSelectFilter({
   const filterOptions = options.length > 0 ? options : ['Нет вариантов'];
 
   return (
-    <div className="relative inline-block w-full" ref={dropdownRef}>
-      {/* Кнопка фильтра - в стиле оригинала */}
+    <div className="relative inline-block" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="text-black transparent px-6 py-4 rounded-[16px] flex items-center gap-2 border-3 border-secondary w-full"
+        className="text-black transparent px-6 py-4 rounded-[16px] flex items-center gap-1 border-3 border-secondary"
       >
         <div className="flex-1 text-left">
           <span className={selectedOptions.length > 0 ? 'text-primary font-medium' : 'text-primary'}>
@@ -106,7 +105,6 @@ export default function MultiSelectFilter({
           </span>
         </div>
         
-        {/* Индикатор количества выбранных - только если не "Все категории" */}
         {selectedOptions.length > 0 && !selectedOptions.includes('Все категории') && (
           <span className="bg-accent text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
             {selectedOptions.length}
@@ -115,7 +113,6 @@ export default function MultiSelectFilter({
         <span className={`text-xs transition-transform ${isOpen ? 'rotate-180' : ''}`}>▼</span>
       </button>
 
-      {/* Выбранные элементы под кнопкой - только если не "Все категории" */}
       {selectedOptions.length > 0 && !selectedOptions.includes('Все категории') && (
         <div className="flex flex-wrap gap-2 mt-2">
           {selectedOptions.map((option) => (
@@ -135,7 +132,6 @@ export default function MultiSelectFilter({
             </div>
           ))}
           
-          {/* Кнопка "Очистить все" */}
           <button
             onClick={clearAll}
             className="text-xs text-secondary hover:text-accent underline"
@@ -145,7 +141,6 @@ export default function MultiSelectFilter({
         </div>
       )}
 
-      {/* Выпадающий список */}
       {isOpen && (
         <div className="absolute z-50 mt-2 w-full rounded-[16px] bg-white shadow-lg border border-secondary overflow-hidden animate-fadeIn">
           <ul className="py-1 max-h-60 overflow-y-auto">

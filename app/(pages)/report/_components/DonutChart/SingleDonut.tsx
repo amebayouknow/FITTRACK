@@ -6,7 +6,7 @@ interface SingleDonutProps {
   size?: number;
 }
 
-export default function SingleDonut({ total, completed, size = 180 }: SingleDonutProps) {
+export default function SingleDonut({ total, completed, size = 280 }: SingleDonutProps) {
   const percentage = Math.round((completed / total) * 100);
   const strokeWidth = 12;
   const radius = (size - strokeWidth) / 2;
@@ -16,7 +16,6 @@ export default function SingleDonut({ total, completed, size = 180 }: SingleDonu
   return (
     <div className="flex flex-col items-center">
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-        {/* Фоновое кольцо */}
         <circle
           cx={size / 2}
           cy={size / 2}
@@ -26,7 +25,6 @@ export default function SingleDonut({ total, completed, size = 180 }: SingleDonu
           strokeWidth={strokeWidth}
         />
         
-        {/* Заполненное кольцо - ОРАНЖЕВОЕ */}
         <circle
           cx={size / 2}
           cy={size / 2}
@@ -41,7 +39,6 @@ export default function SingleDonut({ total, completed, size = 180 }: SingleDonu
         />
       </svg>
 
-      {/* Надписи под диаграммой - в стиле DoubleDonut */}
       <div className="mt-8 text-center space-y-2">
         <div className="text-2xl font-bold text-[#f97316]">{percentage}%</div>
       </div>

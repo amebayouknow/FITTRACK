@@ -24,7 +24,6 @@ export default function ReportsPage() {
   const [period, setPeriod] = useState<PeriodType>('month');
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
-  // Состояния для данных
   const [stats, setStats] = useState({
     workouts: mockData.report.totalWorkouts,
     totalTime: mockData.report.totalTime,
@@ -65,7 +64,7 @@ export default function ReportsPage() {
 
   useEffect(() => {
     const categoryValues: CategoryType[] = [];
-    
+
     if (selectedCategories.includes('Все категории') || selectedCategories.length === 0) {
       categoryValues.push('all');
     } else {
@@ -98,16 +97,15 @@ export default function ReportsPage() {
       exercises: totalExercises
     });
 
-    // Данные для диаграммы
     const totalWorkoutsCount = mockData.workouts.length;
     const selectedCount = selectedCategories.includes('Все категории') || selectedCategories.length === 0
       ? totalWorkoutsCount
       : mockData.workouts.filter(w => {
-          if (selectedCategories.includes('Кардио') && w.category === 'cardio') return true;
-          if (selectedCategories.includes('Силовые') && w.category === 'strength') return true;
-          if (selectedCategories.includes('Растяжка') && w.category === 'stretching') return true;
-          return false;
-        }).length;
+        if (selectedCategories.includes('Кардио') && w.category === 'cardio') return true;
+        if (selectedCategories.includes('Силовые') && w.category === 'strength') return true;
+        if (selectedCategories.includes('Растяжка') && w.category === 'stretching') return true;
+        return false;
+      }).length;
 
     setDonutData({
       total: 100,
@@ -116,7 +114,6 @@ export default function ReportsPage() {
       previousCompleted: Math.round(((selectedCount - 2) / totalWorkoutsCount) * 100)
     });
 
-    // Данные для графика в зависимости от периода
     if (period === 'month') {
       setChartData({
         labels: ['1 нед', '2 нед', '3 нед', '4 нед'],
@@ -143,81 +140,95 @@ export default function ReportsPage() {
 
   return (
     <div className="min-h-screen bg-main">
-      <div className="flex flex-col gap-9 px-2 py-9 max-w-xs mx-auto">
-        <h1 className="text-2xl font-bold text-center mb-4">Отчеты</h1>
+      <div className="w-full px-3 sm:px-4 md:px-6 lg:px-8 py-9">
+        <div className="max-w-7xl mx-auto space-y-8 sm:space-y-10 lg:space-y-12">
+          <div className=" lg:flex lg:items-center lg:gap-4">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 gap-0 w-full lg:flex-1">
+              <div className="min-w-0">
+                <Filter
+                  options={reportOptions.map(opt => opt.label)}
+                  onSelect={(value) => {
+                    const option = reportOptions.find(opt => opt.label === value);
+                    if (option) setReportType(option.value as ReportType);
+                  }}
+                  buttonText="Вид отчета"
+                />
+              </div>
 
-        <div className="flex flex-col gap-4">
-          <Filter
-            options={reportOptions.map(opt => opt.label)}
-            onSelect={(value) => {
-              const option = reportOptions.find(opt => opt.label === value);
-              if (option) setReportType(option.value as ReportType);
-            }}
-            buttonText="Вид отчета"
+              <div className="min-w-0">
+                <Filter
+                  options={periodOptions.map(opt => opt.label)}
+                  onSelect={(value) => {
+                    const option = periodOptions.find(opt => opt.label === value);
+                    if (option) setPeriod(option.value as PeriodType);
+                  }}
+                  buttonText="Период"
+                />
+              </div>
+
+              <div className="min-w-0">
+                <MultiSelectFilter
+                  options={categoryOptions}
+                  onSelect={setSelectedCategories}
+                  buttonText="Категория"
+                  maxDisplay={1}
+                />
+              </div>
+            </div>
+
+            <div className="flex justify-center mt-4 lg:mt-0 lg:flex-shrink-0">
+              <ExportButton />
+            </div>
+          </div>
+
+          <StatsCards
+            workouts={stats.workouts}
+            totalTime={stats.totalTime}
+            exercises={stats.exercises}
           />
 
-          <Filter
-            options={periodOptions.map(opt => opt.label)}
-            onSelect={(value) => {
-              const option = periodOptions.find(opt => opt.label === value);
-              if (option) setPeriod(option.value as PeriodType);
-            }}
-            buttonText="Период"
-          />
+          <div className="lg:flex lg:gap-6 lg:items-center">
+            <div className="rounded-2xl lg:flex-[2]">
+              {reportType === 'simple' ? (
+                <LineChart
+                  labels={chartData.labels}
+                  data={chartData.current}
+                />
+              ) : (
+                <ComparisonChart
+                  labels={chartData.labels}
+                  currentData={chartData.current}
+                  previousData={chartData.previous || []}
+                  currentLabel="Текущий"
+                  previousLabel="Прошлый"
+                />
+              )}
+            </div>
 
-          <MultiSelectFilter
-            options={categoryOptions}
-            onSelect={setSelectedCategories}
-            buttonText="Категории упражнений"
-            maxDisplay={2}
-          />
-        </div>
-
-        <ExportButton />
-
-        <StatsCards
-          workouts={stats.workouts}
-          totalTime={stats.totalTime}
-          exercises={stats.exercises}
-        />
-
-        <div className="rounded-2xl p-4">
-          {reportType === 'simple' ? (
-            <LineChart
-              labels={chartData.labels}
-              data={chartData.current}
-            />
-          ) : (
-            <ComparisonChart
-              labels={chartData.labels}
-              currentData={chartData.current}
-              previousData={chartData.previous || []}
-              currentLabel="Текущий"
-              previousLabel="Прошлый"
-            />
-          )}
-        </div>
-
-        <div className="rounded-2xl p-4">
-          {reportType === 'simple' ? (
-            <SingleDonut
-              total={donutData.total}
-              completed={donutData.completed}
-              size={180}
-            />
-          ) : (
-            <DoubleDonut
-              currentTotal={donutData.total}
-              currentCompleted={donutData.completed}
-              previousTotal={donutData.total}
-              previousCompleted={donutData.previousCompleted}
-              currentLabel="Текущий период"
-              previousLabel="Прошлый период"
-              size={180}
-            />
-          )}
+            <div className="rounded-2xl p-4 sm:p-6 lg:flex-1">
+              <div className="flex justify-center">
+                {reportType === 'simple' ? (
+                  <SingleDonut
+                    total={donutData.total}
+                    completed={donutData.completed}
+                    size={280}
+                  />
+                ) : (
+                  <DoubleDonut
+                    currentTotal={donutData.total}
+                    currentCompleted={donutData.completed}
+                    previousTotal={donutData.total}
+                    previousCompleted={donutData.previousCompleted}
+                    currentLabel="Текущий период"
+                    previousLabel="Прошлый период"
+                    size={180}
+                  />
+                )}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </div >
   );
 }

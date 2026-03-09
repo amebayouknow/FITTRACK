@@ -101,39 +101,3 @@ body {
   width: 100%;
   margin: 0 auto;
 }
-
-/* Скрываем скроллбар по умолчанию */
-.scrollbar-hide {
-    -ms-overflow-style: none;  /* IE и Edge */
-    scrollbar-width: none;     /* Firefox */
-}
-
-.scrollbar-hide::-webkit-scrollbar {
-    display: none;  /* Chrome, Safari, Opera */
-}
-
-/* Показываем скроллбар при наведении */
-.scrollbar-default:hover {
-    -ms-overflow-style: auto;
-    scrollbar-width: thin;
-    scrollbar-color: #f97316 #e5e7eb;
-}
-
-.scrollbar-default:hover::-webkit-scrollbar {
-    display: block;
-    width: 4px;  /* Очень тонкий скроллбар */
-}
-
-.scrollbar-default:hover::-webkit-scrollbar-track {
-    background: #e5e7eb;
-    border-radius: 10px;
-}
-
-.scrollbar-default:hover::-webkit-scrollbar-thumb {
-    background: #f97316;
-    border-radius: 10px;
-}
-
-.scrollbar-default:hover::-webkit-scrollbar-thumb:hover {
-    background: #ea580c;
-}

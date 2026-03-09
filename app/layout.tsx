@@ -22,7 +22,7 @@ export default function RootLayout({
   return (
     <html lang="ru">
       <body className={`${montserrat.variable} antialiased`}>
-        {/* <Header /> */}
+        <Header />
         {children}
       </body>
     </html>

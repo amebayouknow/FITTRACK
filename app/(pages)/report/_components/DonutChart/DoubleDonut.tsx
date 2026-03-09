@@ -17,7 +17,7 @@ export default function DoubleDonut({
   previousCompleted,
   currentLabel,
   previousLabel,
-  size = 180 
+  size = 280 
 }: DoubleDonutProps) {
   const currentPercentage = Math.round((currentCompleted / currentTotal) * 100);
   const previousPercentage = Math.round((previousCompleted / previousTotal) * 100);
@@ -33,7 +33,6 @@ export default function DoubleDonut({
   return (
     <div className="flex flex-col items-center">
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-        {/* Фоновое кольцо для внешнего круга */}
         <circle
           cx={size / 2}
           cy={size / 2}
@@ -43,7 +42,6 @@ export default function DoubleDonut({
           strokeWidth={strokeWidth}
         />
         
-        {/* Внешнее кольцо (текущий период) - ОРАНЖЕВОЕ */}
         <circle
           cx={size / 2}
           cy={size / 2}
@@ -57,7 +55,6 @@ export default function DoubleDonut({
           transform={`rotate(-90 ${size / 2} ${size / 2})`}
         />
 
-        {/* Фоновое кольцо для внутреннего круга */}
         <circle
           cx={size / 2}
           cy={size / 2}
@@ -67,7 +64,6 @@ export default function DoubleDonut({
           strokeWidth={strokeWidth}
         />
         
-        {/* Внутреннее кольцо (прошлый период) - КРАСНОЕ */}
         <circle
           cx={size / 2}
           cy={size / 2}
@@ -82,7 +78,6 @@ export default function DoubleDonut({
         />
       </svg>
 
-      {/* Надписи под диаграммой */}
       <div className="mt-8 text-center space-y-4">
         <div className="grid grid-cols-2 gap-8">
           <div>
