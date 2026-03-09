@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from 'react';
-import TableRow from "../../../_Components/Workout/TableRow/tablerow";
-import { statData as mockStatData } from '../../../MocData';
-import type { StatData } from '../../../index';
+import TableRow from "@/app/_Components/Workout/TableRow/tablerow";
+import { statData as mockStatData } from '@/app/MocData';
+import type { StatData } from '@/app/index';
 
 
 export default function StatsTable() {

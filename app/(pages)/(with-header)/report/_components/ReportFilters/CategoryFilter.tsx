@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from 'react';
-import { CategoryType } from '@/app/index'; // Импортируем из index.ts
+import { CategoryType } from '@/app/index';
 
 interface CategoryFilterProps {
   value: CategoryType;

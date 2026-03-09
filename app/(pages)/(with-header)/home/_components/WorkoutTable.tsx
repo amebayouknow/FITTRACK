@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import TableRow from "../../../_Components/Workout/TableRow/tablerow";
-import { workoutData as mockWorkoutData, statData as mockStatData } from '../../../MocData';
-import Button from '../../../_Components/Button/button';
-import type { WorkoutData, StatData } from '../../../index';
+import TableRow from "@/app/_Components/Workout/TableRow/tablerow";
+import { workoutData as mockWorkoutData, statData as mockStatData } from '@/app/MocData';
+import Button from '@/app/_Components/Button/button';
+import type { WorkoutData, StatData } from '@/app/index';
 
 export default function WorkoutTable() {
     const [workoutData, setWorkoutData] = useState<WorkoutData[]>([]);

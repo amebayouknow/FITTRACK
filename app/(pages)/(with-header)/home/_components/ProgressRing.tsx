@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import Button from '../../../_Components/Button/button';
+import Button from '@/app/_Components/Button/button';
 
 interface ProgressRingProps {
     completed?: number;

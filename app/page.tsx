@@ -1,4 +1,4 @@
-import OnPage from "./(pages)/(onboarding)/page";
+import OnPage from "./(pages)/(without-header)/onboarding/page";
 
 export default function Page(){
   return <OnPage/>
