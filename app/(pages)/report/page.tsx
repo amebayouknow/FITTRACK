@@ -12,7 +12,6 @@ import ExportButton from './_components/ExportButton/ExportButton';
 import { mockData, getStatsByCategory } from '@/app/MocData';
 import { ReportType, PeriodType, CategoryType } from '@/app/index';
 
-// Расширяем тип для данных графика
 interface ChartDataType {
   labels: string[];
   current: number[];
@@ -24,10 +23,6 @@ export default function ReportsPage() {
   const [reportType, setReportType] = useState<ReportType>('simple');
   const [period, setPeriod] = useState<PeriodType>('month');
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-
-  // Для отображения выбранных значений
-  const [selectedReport, setSelectedReport] = useState('');
-  const [selectedPeriod, setSelectedPeriod] = useState('');
 
   // Состояния для данных
   const [stats, setStats] = useState({
@@ -45,12 +40,11 @@ export default function ReportsPage() {
 
   const [donutData, setDonutData] = useState({
     total: 100,
-    completed: 65,
+    completed: 100,
     previousTotal: 100,
-    previousCompleted: 45
+    previousCompleted: 100
   });
 
-  // Опции для фильтров
   const reportOptions = [
     { value: 'simple', label: 'Обычный отчет' },
     { value: 'comparative', label: 'Сравнительный отчет' },
@@ -69,26 +63,17 @@ export default function ReportsPage() {
     'Растяжка',
   ];
 
-  // Обновление данных при изменении фильтров
   useEffect(() => {
-    // Преобразуем выбранные категории в значения для фильтрации
     const categoryValues: CategoryType[] = [];
-
-    // Логика: если выбрано "Все категории", игнорируем остальные
-    if (selectedCategories.includes('Все категории')) {
+    
+    if (selectedCategories.includes('Все категории') || selectedCategories.length === 0) {
       categoryValues.push('all');
     } else {
       if (selectedCategories.includes('Кардио')) categoryValues.push('cardio');
       if (selectedCategories.includes('Силовые')) categoryValues.push('strength');
       if (selectedCategories.includes('Растяжка')) categoryValues.push('stretching');
-
-      // Если ничего не выбрано, показываем все
-      if (categoryValues.length === 0) {
-        categoryValues.push('all');
-      }
     }
 
-    // Получаем статистику по выбранным категориям
     let totalWorkouts = 0;
     let totalTime = 0;
     let totalExercises = 0;
@@ -111,6 +96,24 @@ export default function ReportsPage() {
       workouts: totalWorkouts,
       totalTime,
       exercises: totalExercises
+    });
+
+    // Данные для диаграммы
+    const totalWorkoutsCount = mockData.workouts.length;
+    const selectedCount = selectedCategories.includes('Все категории') || selectedCategories.length === 0
+      ? totalWorkoutsCount
+      : mockData.workouts.filter(w => {
+          if (selectedCategories.includes('Кардио') && w.category === 'cardio') return true;
+          if (selectedCategories.includes('Силовые') && w.category === 'strength') return true;
+          if (selectedCategories.includes('Растяжка') && w.category === 'stretching') return true;
+          return false;
+        }).length;
+
+    setDonutData({
+      total: 100,
+      completed: Math.round((selectedCount / totalWorkoutsCount) * 100),
+      previousTotal: 100,
+      previousCompleted: Math.round(((selectedCount - 2) / totalWorkoutsCount) * 100)
     });
 
     // Данные для графика в зависимости от периода
@@ -138,86 +141,47 @@ export default function ReportsPage() {
     }
   }, [reportType, period, selectedCategories]);
 
-  // Обработчики для фильтров
-  const handleReportTypeChange = (value: string) => {
-    setSelectedReport(value);
-    const option = reportOptions.find(opt => opt.label === value);
-    if (option) {
-      setReportType(option.value as ReportType);
-    }
-  };
-
-  const handlePeriodChange = (value: string) => {
-    setSelectedPeriod(value);
-    const option = periodOptions.find(opt => opt.label === value);
-    if (option) {
-      setPeriod(option.value as PeriodType);
-    }
-  };
-
-  const handleCategoryChange = (selected: string[]) => {
-    // Логика: если выбран "Все категории", то остальные не могут быть выбраны
-    if (selected.includes('Все категории')) {
-      // Если выбрали "Все категории", устанавливаем только его
-      setSelectedCategories(['Все категории']);
-    } else {
-      // Если "Все категории" не выбран, устанавливаем все выбранные категории
-      setSelectedCategories(selected);
-    }
-  };
-
   return (
-    <div className="min-h-screen bg-[#E7E5E4]">
-      <div className="flex flex-col gap-9 px-2 py-9 max-w-[320px] mx-auto">
+    <div className="min-h-screen bg-main">
+      <div className="flex flex-col gap-9 px-2 py-9 max-w-xs mx-auto">
+        <h1 className="text-2xl font-bold text-center mb-4">Отчеты</h1>
 
-
-        {/* Фильтры */}
         <div className="flex flex-col gap-4">
           <Filter
             options={reportOptions.map(opt => opt.label)}
-            onSelect={handleReportTypeChange}
+            onSelect={(value) => {
+              const option = reportOptions.find(opt => opt.label === value);
+              if (option) setReportType(option.value as ReportType);
+            }}
             buttonText="Вид отчета"
           />
 
           <Filter
             options={periodOptions.map(opt => opt.label)}
-            onSelect={handlePeriodChange}
+            onSelect={(value) => {
+              const option = periodOptions.find(opt => opt.label === value);
+              if (option) setPeriod(option.value as PeriodType);
+            }}
             buttonText="Период"
           />
 
           <MultiSelectFilter
             options={categoryOptions}
-            onSelect={handleCategoryChange}
+            onSelect={setSelectedCategories}
             buttonText="Категории упражнений"
             maxDisplay={2}
           />
         </div>
 
-        {/* Информация о выбранных фильтрах */}
-        <div className="bg-white/50 p-3 rounded-xl text-xs text-secondary space-y-1">
-          <p>Вид отчета: <span className="text-primary font-medium ml-1">{selectedReport || 'не выбран'}</span></p>
-          <p>Период: <span className="text-primary font-medium ml-1">{selectedPeriod || 'не выбран'}</span></p>
-          <p>Категории: <span className="text-primary font-medium ml-1">
-            {selectedCategories.length > 0
-              ? (selectedCategories.includes('Все категории')
-                ? 'Все категории'
-                : selectedCategories.join(', '))
-              : 'не выбраны'}
-          </span></p>
-        </div>
-
-        {/* Кнопка экспорта */}
         <ExportButton />
 
-        {/* Статистика */}
         <StatsCards
           workouts={stats.workouts}
           totalTime={stats.totalTime}
           exercises={stats.exercises}
         />
 
-        {/* График */}
-        <div>
+        <div className="rounded-2xl p-4">
           {reportType === 'simple' ? (
             <LineChart
               labels={chartData.labels}
@@ -234,8 +198,7 @@ export default function ReportsPage() {
           )}
         </div>
 
-        {/* Кольцевая диаграмма */}
-        <div>
+        <div className="rounded-2xl p-4">
           {reportType === 'simple' ? (
             <SingleDonut
               total={donutData.total}

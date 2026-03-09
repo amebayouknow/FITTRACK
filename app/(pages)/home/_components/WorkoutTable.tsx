@@ -30,25 +30,26 @@ export default function WorkoutTable() {
     }
 
     return (
-        <div >
-            <div className="bg-secondary rounded-[24px] w-full text-white p-4 shadow mb-4">
+        <div className='w-full' >
+            <div className="bg-secondary rounded-3xl w-full text-white p-4 shadow mb-4">
                 <h3 className="text-2xl flex justify-center mb-4 text-center">
                     Последние тренировки
                 </h3>
 
-                <div className="flex justify-between nowrap gap-2 mb-2 text-xs px-2">
+                <div className="flex justify-between nowrap gap-2 mb-2 text-xs px-2 sm:text-base">
                     <div>Дата</div>
                     <div>Общее время</div>
                     <div>Количество</div>
                 </div>
-
-                {workoutData.map((item) => (
-                    <TableRow
-                        key={item.id}
-                        type="workout"
-                        data={item}
-                    />
-                ))}
+                <div className="space-y-2 max-h-[400px] overflow-y-auto mb-2 scrollbar-hide ">
+                    {workoutData.map((item) => (
+                        <TableRow
+                            key={item.id}
+                            type="workout"
+                            data={item}
+                        />
+                    ))}
+                </div>
                 <div className='flex flex-center'>
                     <Button
                         text="Смотреть отчет"

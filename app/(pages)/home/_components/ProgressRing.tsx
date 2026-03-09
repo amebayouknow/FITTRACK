@@ -11,7 +11,7 @@ interface ProgressRingProps {
     innerCircleSize?: number;
 }
 
-export default function ProgressRing({completed = 5,total = 4,size = 250,strokeWidth = 20,innerCircleSize = 150}: ProgressRingProps) {
+export default function ProgressRing({ completed = 5, total = 4, size = 250, strokeWidth = 20, innerCircleSize = 150 }: ProgressRingProps) {
     const [progress, setProgress] = useState(0);
     const [overProgress, setOverProgress] = useState(0);
 
@@ -31,7 +31,7 @@ export default function ProgressRing({completed = 5,total = 4,size = 250,strokeW
     const overOffset = circumference * (1 - overProgress);
 
     return (
-        <div className='flex flex-col items-center p-4 rounded-[24px]'>
+        <div className='flex flex-col items-center rounded-3xl'>
             <div className='relative mb-3' style={{ width: size, height: size }}>
                 <svg
                     width={size}
@@ -93,10 +93,10 @@ export default function ProgressRing({completed = 5,total = 4,size = 250,strokeW
                     <span className='text-5xl text-primary'>{completed}/{total}</span>
                 </div>
             </div>
-                <Button
-                    text='Добавить тренировку'
-                    variant='primary'
-                />
+            <Button
+                text='Добавить тренировку'
+                variant='primary'
+            />
         </div>
     );
 }

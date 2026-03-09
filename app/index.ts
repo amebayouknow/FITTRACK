@@ -14,7 +14,7 @@ export interface WorkoutData {
     time: string;
     exercises: string;
     category: 'cardio' | 'strength' | 'stretching';
-    duration: number; // в минутах
+    duration: number;
     exercisesCount: number;
 }
 
@@ -49,7 +49,10 @@ export interface ReportData {
     };
 }
 
-// Типы для фильтров - экспортируем как отдельные типы
+// Типы для фильтров
 export type ReportType = 'simple' | 'comparative';
 export type PeriodType = 'month' | 'twoMonths' | 'quarter';
 export type CategoryType = 'all' | 'cardio' | 'strength' | 'stretching';
+
+// НОВЫЙ ТИП для TableRow
+export type TableRowType = 'workout' | 'stat' | 'workout-alt';
