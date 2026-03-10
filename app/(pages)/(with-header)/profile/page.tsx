@@ -50,7 +50,7 @@ export default function ProfilePage() {
   const handleLogout = () => {
     sessionStorage.removeItem('session');
     localStorage.removeItem('session');
-    router.push('/home');
+    router.push('/onboarding');
   };
 
   const handleSaveChanges = () => {

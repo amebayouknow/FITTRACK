@@ -54,5 +54,22 @@ export type ReportType = 'simple' | 'comparative';
 export type PeriodType = 'month' | 'twoMonths' | 'quarter';
 export type CategoryType = 'all' | 'cardio' | 'strength' | 'stretching';
 
-// НОВЫЙ ТИП для TableRow
+export interface WorkoutData {
+    id: number;
+    date: string;
+    time: string;
+    exercises: string;
+    category: 'cardio' | 'strength' | 'stretching';
+    duration: number;
+    exercisesCount: number;
+}
+
+export interface StatData {
+    id: number;
+    type: string;
+    time: string;
+    count: string;
+    category: 'cardio' | 'strength' | 'stretching';
+}
+
 export type TableRowType = 'workout' | 'stat' | 'workout-alt';

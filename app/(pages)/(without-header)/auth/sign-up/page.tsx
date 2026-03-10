@@ -32,7 +32,7 @@ export default function SignUpPage() {
         <div className="w-full max-w-7xl mx-auto lg:px-8">
           <div className="bg-white md:bg-stone sm:shadow-custom lg:rounded-3xl p-5 sm:p-6 md:p-8">
             <div className="flex justify-center">
-              <Logo />
+              <Logo disableLink={true} />
             </div>
             <div className="flex justify-center mt-4">
               <div className="text-secondary">Загрузка...</div>

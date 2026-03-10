@@ -19,7 +19,6 @@ export default function Checkbox({ label, checked = false, onChange }: CheckboxP
 
     return (
         <div className="flex items-center gap-2 cursor-pointer group p-2" onClick={handleClick}>
-            {/* Контейнер чекбокса с фиксированным размером */}
             <div className="relative flex-shrink-0">
                 <div className={` w-6 h-6 border-4 rounded-sm transition-all duration-200
                     ${isChecked 
@@ -28,7 +27,6 @@ export default function Checkbox({ label, checked = false, onChange }: CheckboxP
                     }
                 `} />
                 
-                {/* Галочка (поверх) */}
                 {isChecked && (
                     <svg 
                         className="absolute inset-0 w-6 h-6 p-1 text-white pointer-events-none"

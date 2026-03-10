@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     text: string;
-    variant?: 'primary' | 'secondary' | 'outline' | 'text';
+    variant?: 'primary' | 'secondary' | 'outline' | 'text' | 'outlinewhite';
     href?: string; 
     target?: string;
 }
@@ -60,6 +60,12 @@ export default function Button({
             boxShadow:'none',
             padding: '0',
             fontWeight: 400,  
+        },
+        outlinewhite: {
+            backgroundColor: 'transparent',
+            color: 'var(--color-white)',
+            border: '3px solid var(--color-white)',
+            fontWeight: 700,  
         },
     };
 

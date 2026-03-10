@@ -1,6 +1,6 @@
 "use client";
 
-import { WorkoutData, StatData, TableRowType } from '../../../index';
+import { WorkoutData, StatData, TableRowType } from '@/app/index';
 
 interface TableRowProps {
   data: WorkoutData | StatData;
