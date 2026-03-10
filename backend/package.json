@@ -1,0 +1,28 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "db:start": "net start MySQL80",
+    "db:create": "mysql -u root -p -e \"CREATE DATABASE IF NOT EXISTS fittrackdb;\"",
+    "db:init": "mysql -u root -p fittrackdb < database/schema.sql",
+    "db:install": "npm run db:create && npm run db:init"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "bcrypt": "6.0.0",
+    "express": "5.2.1",
+    "jsonwebtoken": "9.0.3",
+    "mysql2": "3.19.0",
+    "uuid": "13.0.0",
+    "nodemon": "3.1.14"
+  }
+  
+}
