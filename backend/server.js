@@ -11,6 +11,9 @@ app.use('/auth', authRoutes);
 const profileRoutes = require('./modules/profile/profile.routes');
 app.use('/profile', profileRoutes);
 
+const trainingRoutes = require('./modules/training/training.routes');
+app.use('/training', trainingRoutes);
+
 
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
