@@ -14,6 +14,9 @@ app.use('/profile', profileRoutes);
 const trainingRoutes = require('./modules/training/training.routes');
 app.use('/training', trainingRoutes);
 
+const categoryRoutes = require('./modules/category/category.routes');
+app.use('/category', categoryRoutes);
+
 
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);

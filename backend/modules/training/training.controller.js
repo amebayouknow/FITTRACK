@@ -214,3 +214,65 @@ exports.getAllTrainings = async (req, res) => {
     return res.status(response.status).json(response);
   }
 };
+
+exports.deleteTraining = async (req, res) => {
+  const { training_id, user_id } = req.body; 
+
+  let response = {
+    message: "Training deleted",
+    success: true,
+    body: null,
+    status: 200,
+  };
+
+  try {
+    if (!training_id || !user_id) {
+      response.status = 400;
+      response.success = false;
+      response.message = "Не указаны training_id или user_id";
+      return res.status(response.status).json(response);
+    }
+
+    const deleteExercisesSql = `
+      DELETE e
+      FROM exersice e
+      INNER JOIN training t ON e.training_id = t.training_id
+      WHERE e.training_id = ? AND t.user_id = ?
+    `;
+    db.query(deleteExercisesSql, [training_id, user_id], (err) => {
+      if (err) {
+        console.log("Error deleting exercises:", err);
+        response.status = 500;
+        response.success = false;
+        response.message = "Server Error (exercises)";
+        return res.status(response.status).json(response);
+      }
+
+      const deleteTrainingSql = "DELETE FROM training WHERE training_id = ? AND user_id = ?";
+      db.query(deleteTrainingSql, [training_id, user_id], (err, result) => {
+        if (err) {
+          console.log("Error deleting training:", err);
+          response.status = 500;
+          response.success = false;
+          response.message = "Server Error (training)";
+          return res.status(response.status).json(response);
+        }
+
+        if (result.affectedRows === 0) {
+          response.status = 404;
+          response.success = false;
+          response.message = "Training not found or does not belong to this user";
+          return res.status(response.status).json(response);
+        }
+
+        return res.status(response.status).json(response);
+      });
+    });
+  } catch (err) {
+    console.log(err);
+    response.status = 500;
+    response.success = false;
+    response.message = "Server Error";
+    return res.status(response.status).json(response);
+  }
+};
