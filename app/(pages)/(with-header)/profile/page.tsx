@@ -6,6 +6,7 @@ import Button from "@/app/_Components/Button/button";
 import InputField from "@/app/_Components/Input/input";
 import Checkbox from "@/app/_Components/Checkbox/checkbox";
 import Image from 'next/image';
+import { messages } from '@/app/MocData';
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -25,9 +26,9 @@ export default function ProfilePage() {
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [showMessage, setShowMessage] = useState<{type: 'success' | 'error' | 'info', text: string} | null>(null);
 
   // Состояния для смены пароля
-  const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
@@ -64,7 +65,8 @@ export default function ProfilePage() {
     };
     localStorage.setItem('profile', JSON.stringify(profileData));
     setIsEditing(false);
-    alert('Изменения сохранены!');
+    setShowMessage({type: 'success', text: messages.success.profileSaved});
+    setTimeout(() => setShowMessage(null), 3000);
   };
 
   const handleCancelEdit = () => {
@@ -87,40 +89,39 @@ export default function ProfilePage() {
   };
 
   const handleChangePassword = () => {
-    if (!oldPassword || !newPassword || !confirmPassword) {
-      alert('Заполните все поля');
+    if (!newPassword || !confirmPassword) {
+      setShowMessage({type: 'error', text: messages.error.fillAllFields});
+      setTimeout(() => setShowMessage(null), 3000);
       return;
     }
 
     if (newPassword.length < 6) {
-      alert('Пароль должен быть не менее 6 символов');
+      setShowMessage({type: 'error', text: messages.error.passwordLength});
+      setTimeout(() => setShowMessage(null), 3000);
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      alert('Пароли не совпадают');
+      setShowMessage({type: 'error', text: messages.error.passwordMatch});
+      setTimeout(() => setShowMessage(null), 3000);
       return;
     }
 
     const user = JSON.parse(localStorage.getItem('user') || '{}');
-    if (user.password !== oldPassword) {
-      alert('Неверный текущий пароль');
-      return;
-    }
-
     user.password = newPassword;
     localStorage.setItem('user', JSON.stringify(user));
 
     setShowPasswordModal(false);
-    setOldPassword('');
     setNewPassword('');
     setConfirmPassword('');
-    alert('Пароль успешно изменен!');
+    setShowMessage({type: 'success', text: messages.success.passwordChanged});
+    setTimeout(() => setShowMessage(null), 3000);
   };
 
   const handleDeleteAccount = () => {
     if (!confirmDelete) {
-      alert('Подтвердите удаление аккаунта');
+      setShowMessage({type: 'error', text: messages.error.confirmDelete});
+      setTimeout(() => setShowMessage(null), 3000);
       return;
     }
 
@@ -130,7 +131,7 @@ export default function ProfilePage() {
     sessionStorage.removeItem('session');
 
     setShowDeleteModal(false);
-    router.push('/home');
+    router.push('/onboarding');
   };
 
   const selectGender = (selected: string) => {
@@ -142,6 +143,17 @@ export default function ProfilePage() {
     <div className="min-h-screen py-6 sm:py-9 bg-main">
       <div className="w-full max-w-7xl mx-auto lg:px-8">
         <div className="bg-stone shadow-custom lg:rounded-3xl p-5 sm:p-6 md:p-8">
+
+          {/* Сообщения */}
+          {showMessage && (
+            <div className={`mb-4 p-3 rounded-2xl text-sm text-center ${
+              showMessage.type === 'success' ? 'bg-green-100 text-green-700 border border-green-500' :
+              showMessage.type === 'error' ? 'bg-warning/10 text-warning border border-warning' :
+              'bg-blue-100 text-blue-700 border border-blue-500'
+            }`}>
+              {showMessage.text}
+            </div>
+          )}
 
           {/* Кнопка выхода */}
           <div className="flex justify-end mb-4 md:mb-6">
@@ -205,7 +217,7 @@ export default function ProfilePage() {
             )}
           </div>
 
-          {/* Центрирование формы */}
+          {/* Форма */}
           <div className="flex justify-center">
             <div className="w-full max-w-md lg:max-w-lg space-y-4">
 
@@ -216,6 +228,7 @@ export default function ProfilePage() {
                 value={goal}
                 onChange={setGoal}
                 disabled={!isEditing}
+                autoComplete="off"
               />
 
               {/* Пол */}
@@ -250,6 +263,7 @@ export default function ProfilePage() {
                 value={age}
                 onChange={setAge}
                 disabled={!isEditing}
+                autoComplete="off"
               />
 
               {/* Рост */}
@@ -259,6 +273,7 @@ export default function ProfilePage() {
                 value={height}
                 onChange={setHeight}
                 disabled={!isEditing}
+                autoComplete="off"
               />
 
               {/* Вес */}
@@ -268,6 +283,7 @@ export default function ProfilePage() {
                 value={weight}
                 onChange={setWeight}
                 disabled={!isEditing}
+                autoComplete="off"
               />
 
               {/* Кнопки редактирования */}
@@ -312,7 +328,7 @@ export default function ProfilePage() {
         </div>
       </div>
 
-      {/* Модальные окна - фиксированная ширина */}
+      {/* Модальное окно выхода */}
       {showLogoutModal && (
         <div className="fixed inset-0 bg-secondary/50 flex items-center justify-center p-4 z-50">
           <div className="bg-stone rounded-3xl p-6 w-full max-w-sm mx-4">
@@ -326,36 +342,61 @@ export default function ProfilePage() {
         </div>
       )}
 
+      {/* Модальное окно выбора пола */}
       {showGenderModal && (
         <div className="fixed inset-0 bg-secondary/50 flex items-center justify-center p-4 z-50">
           <div className="bg-stone rounded-3xl p-6 w-full max-w-sm mx-4">
             <h3 className="text-xl font-bold text-primary text-center mb-4">Выберите пол</h3>
             <div className="space-y-2">
-              <button onClick={() => selectGender('male')} className="w-full px-6 py-4 rounded-2xl border-2 border-accent hover:bg-accent/10 transition-all duration-300 text-left text-primary font-medium">
+              <button 
+                onClick={() => selectGender('male')} 
+                className="w-full px-6 py-4 rounded-2xl border-2 border-accent hover:bg-accent/10 transition-all duration-300 text-left text-primary font-medium"
+              >
                 Мужской
               </button>
-              <button onClick={() => selectGender('female')} className="w-full px-6 py-4 rounded-2xl border-2 border-accent hover:bg-accent/10 transition-all duration-300 text-left text-primary font-medium">
+              <button 
+                onClick={() => selectGender('female')} 
+                className="w-full px-6 py-4 rounded-2xl border-2 border-accent hover:bg-accent/10 transition-all duration-300 text-left text-primary font-medium"
+              >
                 Женский
               </button>
-              <button onClick={() => selectGender('other')} className="w-full px-6 py-4 rounded-2xl border-2 border-accent hover:bg-accent/10 transition-all duration-300 text-left text-primary font-medium">
+              <button 
+                onClick={() => selectGender('other')} 
+                className="w-full px-6 py-4 rounded-2xl border-2 border-accent hover:bg-accent/10 transition-all duration-300 text-left text-primary font-medium"
+              >
                 Другой
               </button>
             </div>
-            <button onClick={() => setShowGenderModal(false)} className="w-full mt-4 text-accent hover:underline">
+            <button 
+              onClick={() => setShowGenderModal(false)} 
+              className="w-full mt-4 text-accent hover:underline"
+            >
               Отмена
             </button>
           </div>
         </div>
       )}
 
+      {/* Модальное окно смены пароля */}
       {showPasswordModal && (
         <div className="fixed inset-0 bg-secondary/50 flex items-center justify-center p-4 z-50">
           <div className="bg-stone rounded-3xl p-6 w-full max-w-sm mx-4">
             <h3 className="text-xl font-bold text-primary text-center mb-4">Изменить пароль</h3>
             <div className="space-y-3">
-              <InputField type="password" hint="Текущий пароль" value={oldPassword} onChange={setOldPassword} />
-              <InputField type="password" hint="Новый пароль" value={newPassword} onChange={setNewPassword} />
-              <InputField type="password" hint="Подтвердите пароль" value={confirmPassword} onChange={setConfirmPassword} />
+              <InputField 
+                type="password" 
+                hint="Новый пароль" 
+                value={newPassword} 
+                onChange={setNewPassword}
+                autoComplete="new-password"
+              />
+              <InputField 
+                type="password" 
+                hint="Подтвердите пароль" 
+                value={confirmPassword} 
+                onChange={setConfirmPassword}
+                autoComplete="new-password"
+              />
             </div>
             <div className="flex flex-col gap-3 mt-4">
               <Button text="Отмена" variant="text" onClick={() => setShowPasswordModal(false)} />
@@ -365,13 +406,18 @@ export default function ProfilePage() {
         </div>
       )}
 
+      {/* Модальное окно удаления аккаунта */}
       {showDeleteModal && (
         <div className="fixed inset-0 bg-secondary/50 flex items-center justify-center p-4 z-50">
           <div className="bg-stone rounded-3xl p-6 w-full max-w-sm mx-4">
             <h3 className="text-xl font-bold text-primary text-center mb-4">Удалить аккаунт?</h3>
-            <p className="text-sm text-secondary text-center mb-4">Это действие нельзя отменить. Все ваши данные будут потеряны.</p>
+            <p className="text-sm text-secondary text-center mb-4">{messages.warning.deleteAccount}</p>
             <div className="mb-4">
-              <Checkbox label="Я понимаю, что удаляю аккаунт навсегда" checked={confirmDelete} onChange={setConfirmDelete} />
+              <Checkbox 
+                label="Я понимаю, что удаляю аккаунт навсегда" 
+                checked={confirmDelete} 
+                onChange={setConfirmDelete} 
+              />
             </div>
             <div className="flex gap-3">
               <div className="flex-1">

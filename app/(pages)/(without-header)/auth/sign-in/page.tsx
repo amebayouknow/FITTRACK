@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Logo from "@/app/_Components/Logo/logo";
 import Button from "@/app/_Components/Button/button";
 import InputField from "@/app/_Components/Input/input";
+import { messages } from '@/app/MocData';
 
 export default function LoginPage() {
     const [isMounted, setIsMounted] = useState(false);
@@ -23,6 +24,7 @@ export default function LoginPage() {
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [step, setStep] = useState<'login' | 'request' | 'reset'>('login');
+    const [showMessage, setShowMessage] = useState<string | null>(null);
 
     useEffect(() => {
         setIsMounted(true);
@@ -54,15 +56,15 @@ export default function LoginPage() {
         let isValid = true;
 
         if (!email) {
-            newErrors.email = 'Введите email';
+            newErrors.email = messages.error.emailRequired;
             isValid = false;
         } else if (!/\S+@\S+\.\S+/.test(email)) {
-            newErrors.email = 'Введите корректный email';
+            newErrors.email = messages.error.invalidEmail;
             isValid = false;
         }
 
         if (!password) {
-            newErrors.password = 'Введите пароль';
+            newErrors.password = messages.error.fillAllFields.split(' ')[0] + ' пароль';
             isValid = false;
         }
 
@@ -84,7 +86,7 @@ export default function LoginPage() {
             const savedUser = localStorage.getItem('user');
 
             if (!savedUser) {
-                setErrors({ ...errors, general: 'Пользователь не найден' });
+                setErrors({ ...errors, general: messages.error.userNotFound });
                 return;
             }
 
@@ -99,10 +101,10 @@ export default function LoginPage() {
 
                 router.push('/home');
             } else {
-                setErrors({ ...errors, general: 'Неверный email или пароль' });
+                setErrors({ ...errors, general: messages.error.wrongCredentials });
             }
         } catch (error) {
-            setErrors({ ...errors, general: 'Ошибка при входе' });
+            setErrors({ ...errors, general: messages.error.userNotFound });
         } finally {
             setIsLoading(false);
         }
@@ -110,12 +112,12 @@ export default function LoginPage() {
 
     const handleRequestReset = async () => {
         if (!resetEmail) {
-            setErrors({ ...errors, general: 'Введите email' });
+            setErrors({ ...errors, general: messages.error.emailRequired });
             return;
         }
 
         if (!/\S+@\S+\.\S+/.test(resetEmail)) {
-            setErrors({ ...errors, general: 'Введите корректный email' });
+            setErrors({ ...errors, general: messages.error.invalidEmail });
             return;
         }
 
@@ -126,7 +128,7 @@ export default function LoginPage() {
             const user = savedUser ? JSON.parse(savedUser) : null;
 
             if (!user || user.email !== resetEmail) {
-                setErrors({ ...errors, general: 'Пользователь с таким email не найден' });
+                setErrors({ ...errors, general: messages.error.userNotFound });
                 return;
             }
 
@@ -138,17 +140,12 @@ export default function LoginPage() {
                 expires: Date.now() + 15 * 60 * 1000
             }));
 
-            console.log('========== КОД ВОССТАНОВЛЕНИЯ ==========');
-            console.log(`Email: ${resetEmail}`);
-            console.log(`Код: ${code}`);
-            console.log('=========================================');
-
-            alert(`Код восстановления отправлен на ${resetEmail}\n(В консоли браузера)`);
-
+            setShowMessage(messages.info.resetCodeSent(resetEmail));
+            setTimeout(() => setShowMessage(null), 5000);
             setStep('reset');
 
         } catch (error) {
-            setErrors({ ...errors, general: 'Ошибка при отправке кода' });
+            setErrors({ ...errors, general: messages.error.userNotFound });
         } finally {
             setIsLoading(false);
         }
@@ -156,17 +153,17 @@ export default function LoginPage() {
 
     const handleResetPassword = async () => {
         if (!resetCode || !newPassword || !confirmPassword) {
-            setErrors({ ...errors, general: 'Заполните все поля' });
+            setErrors({ ...errors, general: messages.error.fillAllFields });
             return;
         }
 
         if (newPassword.length < 6) {
-            setErrors({ ...errors, general: 'Пароль должен быть не менее 6 символов' });
+            setErrors({ ...errors, general: messages.error.passwordLength });
             return;
         }
 
         if (newPassword !== confirmPassword) {
-            setErrors({ ...errors, general: 'Пароли не совпадают' });
+            setErrors({ ...errors, general: messages.error.passwordMatch });
             return;
         }
 
@@ -176,17 +173,17 @@ export default function LoginPage() {
             const resetData = JSON.parse(localStorage.getItem('resetData') || '{}');
 
             if (!resetData.code) {
-                setErrors({ ...errors, general: 'Код не найден. Запросите новый код.' });
+                setErrors({ ...errors, general: messages.error.codeNotFound });
                 return;
             }
 
             if (resetData.code !== resetCode) {
-                setErrors({ ...errors, general: 'Неверный код' });
+                setErrors({ ...errors, general: messages.error.invalidCode });
                 return;
             }
 
             if (resetData.expires < Date.now()) {
-                setErrors({ ...errors, general: 'Код истек. Запросите новый код.' });
+                setErrors({ ...errors, general: messages.error.codeExpired });
                 return;
             }
 
@@ -196,7 +193,8 @@ export default function LoginPage() {
 
             localStorage.removeItem('resetData');
 
-            alert('Пароль успешно изменен!');
+            setShowMessage(messages.success.passwordChanged);
+            setTimeout(() => setShowMessage(null), 3000);
 
             setStep('login');
             setResetEmail('');
@@ -205,7 +203,7 @@ export default function LoginPage() {
             setConfirmPassword('');
 
         } catch (error) {
-            setErrors({ ...errors, general: 'Ошибка при сбросе пароля' });
+            setErrors({ ...errors, general: messages.error.userNotFound });
         } finally {
             setIsLoading(false);
         }
@@ -217,10 +215,10 @@ export default function LoginPage() {
             <div className="min-h-screen py-6 sm:py-9 bg-stone md:bg-main">
                 <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="bg-stone md:[box-shadow:0_0_20px_10px_rgba(249,115,22,0.25)] lg:rounded-3xl p-5 sm:p-6 md:p-8">
-                        
+
                         {/* Логотип */}
                         <div className="flex justify-start mb-6 md:mb-8">
-                            <Logo />
+                            <Logo disableLink={true} />
                         </div>
 
                         {/* Заголовок */}
@@ -229,30 +227,42 @@ export default function LoginPage() {
                             <p className="text-sm text-secondary">Введите свои данные для входа</p>
                         </div>
 
-                        {/* Центрирование формы */}
+                        {/* Форма */}
                         <div className="flex justify-center">
-                            <div className="w-full max-w-md lg:max-w-lg space-y-4">
-                                
+                            <div className="w-full max-w-md lg:max-w-lg">
+
                                 {errors.general && (
-                                    <div className="p-3 bg-warning/10 border border-warning rounded-2xl text-warning text-sm text-center">
+                                    <div className="mb-4 p-3 bg-warning/10 border border-warning rounded-2xl text-warning text-sm text-center">
                                         {errors.general}
                                     </div>
                                 )}
 
                                 <form onSubmit={handleSubmit} className="space-y-4">
-                                    <InputField
-                                        type="email"
-                                        hint="Email"
-                                        value={email}
-                                        onChange={setEmail}
-                                    />
+                                    <div>
+                                        <InputField
+                                            type="email"
+                                            hint="Email"
+                                            value={email}
+                                            onChange={setEmail}
+                                            autoComplete="email"
+                                        />
+                                        {errors.email && (
+                                            <p className="text-xs text-warning mt-1">{errors.email}</p>
+                                        )}
+                                    </div>
 
-                                    <InputField
-                                        type="password"
-                                        hint="Пароль"
-                                        value={password}
-                                        onChange={setPassword}
-                                    />
+                                    <div>
+                                        <InputField
+                                            type="password"
+                                            hint="Пароль"
+                                            value={password}
+                                            onChange={setPassword}
+                                            autoComplete="current-password"
+                                        />
+                                        {errors.password && (
+                                            <p className="text-xs text-warning mt-1">{errors.password}</p>
+                                        )}
+                                    </div>
 
                                     <Button
                                         text={isLoading ? "Вход..." : "Войти"}
@@ -262,7 +272,7 @@ export default function LoginPage() {
                                 </form>
 
                                 {/* Кнопка забыли пароль */}
-                                <div className="flex justify-center pt-2">
+                                <div className="flex justify-center mt-4">
                                     <Button
                                         text="Забыли пароль?"
                                         variant="text"
@@ -271,7 +281,7 @@ export default function LoginPage() {
                                 </div>
 
                                 {/* Разделитель */}
-                                <div className="relative flex items-center py-2">
+                                <div className="relative flex items-center py-4">
                                     <div className="flex-grow border-t border-secondary/20"></div>
                                     <span className="flex-shrink mx-4 text-sm text-secondary">или</span>
                                     <div className="flex-grow border-t border-secondary/20"></div>
@@ -300,10 +310,10 @@ export default function LoginPage() {
             <div className="min-h-screen py-6 sm:py-9 bg-stone md:bg-main">
                 <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="bg-stone shadow-lg sm:shadow-custom lg:rounded-3xl p-5 sm:p-6 md:p-8">
-                        
+
                         {/* Логотип */}
                         <div className="flex justify-center mb-6 md:mb-8">
-                            <Logo />
+                            <Logo disableLink={true} />
                         </div>
 
                         {/* Заголовок */}
@@ -312,35 +322,38 @@ export default function LoginPage() {
                             <p className="text-sm text-secondary">Введите email, мы отправим код подтверждения</p>
                         </div>
 
-                        {/* Центрирование формы */}
+                        {/* Форма */}
                         <div className="flex justify-center">
-                            <div className="w-full max-w-md lg:max-w-lg space-y-4">
-                                
+                            <div className="w-full max-w-md lg:max-w-lg">
+
                                 {errors.general && (
-                                    <div className="p-3 bg-warning/10 border border-warning rounded-2xl text-warning text-sm text-center">
+                                    <div className="mb-4 p-3 bg-warning/10 border border-warning rounded-2xl text-warning text-sm text-center">
                                         {errors.general}
                                     </div>
                                 )}
 
-                                <InputField
-                                    type="email"
-                                    hint="Email"
-                                    value={resetEmail}
-                                    onChange={setResetEmail}
-                                />
-
-                                <Button
-                                    text={isLoading ? "Отправка..." : "Отправить код"}
-                                    variant="primary"
-                                    onClick={handleRequestReset}
-                                />
-
-                                <div className="flex justify-center pt-2">
-                                    <Button
-                                        text="Назад ко входу"
-                                        variant="text"
-                                        onClick={() => setStep('login')}
+                                <div className="space-y-4">
+                                    <InputField
+                                        type="email"
+                                        hint="Email"
+                                        value={resetEmail}
+                                        onChange={setResetEmail}
+                                        autoComplete="email"
                                     />
+
+                                    <Button
+                                        text={isLoading ? "Отправка..." : "Отправить код"}
+                                        variant="primary"
+                                        onClick={handleRequestReset}
+                                    />
+
+                                    <div className="flex justify-center">
+                                        <Button
+                                            text="Назад ко входу"
+                                            variant="text"
+                                            onClick={() => setStep('login')}
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -355,61 +368,71 @@ export default function LoginPage() {
         <div className="min-h-screen py-6 sm:py-9 bg-stone md:bg-main">
             <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="bg-stone shadow-lg sm:shadow-custom lg:rounded-3xl p-5 sm:p-6 md:p-8">
-                    
+
                     {/* Логотип */}
                     <div className="flex justify-center mb-6 md:mb-8">
-                        <Logo />
+                        <Logo disableLink={true} />
                     </div>
-
+                    {/* Сообщения */}
+                    {showMessage && (
+                        <div className="mb-4 p-3 bg-green-100 border border-green-500 rounded-2xl text-green-700 text-sm text-center">
+                            {showMessage}
+                        </div>
+                    )}
                     {/* Заголовок */}
                     <div className="text-center mb-6 md:mb-8">
                         <h1 className="text-2xl sm:text-3xl text-accent font-bold mb-2">Новый пароль</h1>
                         <p className="text-sm text-secondary">Введите код из письма и новый пароль</p>
                     </div>
 
-                    {/* Центрирование формы */}
+                    {/* Форма */}
                     <div className="flex justify-center">
-                        <div className="w-full max-w-md lg:max-w-lg space-y-4">
-                            
+                        <div className="w-full max-w-md lg:max-w-lg">
+
                             {errors.general && (
-                                <div className="p-3 bg-warning/10 border border-warning rounded-2xl text-warning text-sm text-center">
+                                <div className="mb-4 p-3 bg-warning/10 border border-warning rounded-2xl text-warning text-sm text-center">
                                     {errors.general}
                                 </div>
                             )}
 
-                            <InputField
-                                type="text"
-                                hint="Код из письма"
-                                value={resetCode}
-                                onChange={setResetCode}
-                            />
-
-                            <InputField
-                                type="password"
-                                hint="Новый пароль"
-                                value={newPassword}
-                                onChange={setNewPassword}
-                            />
-
-                            <InputField
-                                type="password"
-                                hint="Подтвердите пароль"
-                                value={confirmPassword}
-                                onChange={setConfirmPassword}
-                            />
-
-                            <Button
-                                text={isLoading ? "Сохранение..." : "Сохранить новый пароль"}
-                                variant="primary"
-                                onClick={handleResetPassword}
-                            />
-
-                            <div className="flex justify-center pt-2">
-                                <Button
-                                    text="Назад"
-                                    variant="text"
-                                    onClick={() => setStep('request')}
+                            <div className="space-y-4">
+                                <InputField
+                                    type="text"
+                                    hint="Код из письма"
+                                    value={resetCode}
+                                    onChange={setResetCode}
+                                    autoComplete="one-time-code"
                                 />
+
+                                <InputField
+                                    type="password"
+                                    hint="Новый пароль"
+                                    value={newPassword}
+                                    onChange={setNewPassword}
+                                    autoComplete="new-password"
+                                />
+
+                                <InputField
+                                    type="password"
+                                    hint="Подтвердите пароль"
+                                    value={confirmPassword}
+                                    onChange={setConfirmPassword}
+                                    autoComplete="new-password"
+                                />
+
+                                <Button
+                                    text={isLoading ? "Сохранение..." : "Сохранить новый пароль"}
+                                    variant="primary"
+                                    onClick={handleResetPassword}
+                                />
+
+                                <div className="flex justify-center">
+                                    <Button
+                                        text="Назад"
+                                        variant="text"
+                                        onClick={() => setStep('request')}
+                                    />
+                                </div>
                             </div>
                         </div>
                     </div>

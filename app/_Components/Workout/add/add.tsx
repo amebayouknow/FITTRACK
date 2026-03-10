@@ -1,4 +1,4 @@
-export default function AddWorkout() {
+export default function Add() {
     return (
         <div className="flex justify-between items-center text-accent px-3 py-3 rounded-[16px] mb-2 shadow border-2 border-dashed border-bg-accent">
             <span className="exercises-cell date">Добавить тренировку</span>

@@ -51,25 +51,43 @@ export interface ReportData {
 
 // Типы для фильтров
 export type ReportType = 'simple' | 'comparative';
-export type PeriodType = 'month' | 'twoMonths' | 'quarter';
+export type PeriodType = 'month' | 'twoMonths'; // удален 'quarter'
 export type CategoryType = 'all' | 'cardio' | 'strength' | 'stretching';
 
-export interface WorkoutData {
+export type TableRowType = 'workout' | 'stat' | 'workout-alt';
+
+// Типы для запланированных тренировок
+export interface ScheduledExercise {
+    id: number;
+    name: string;
+    type: string;
+}
+
+export interface ScheduledWorkout {
     id: number;
     date: string;
     time: string;
-    exercises: string;
-    category: 'cardio' | 'strength' | 'stretching';
-    duration: number;
-    exercisesCount: number;
+    exercises: ScheduledExercise[];
 }
 
-export interface StatData {
+// Типы для онбординга
+export interface OnboardingSlide {
     id: number;
-    type: string;
-    time: string;
-    count: string;
-    category: 'cardio' | 'strength' | 'stretching';
+    image: string;
+    alt: string;
 }
 
-export type TableRowType = 'workout' | 'stat' | 'workout-alt';
+export interface AboutData {
+    description: string;
+    accentWidth: string;
+    warningWidth: string;
+}
+
+// Типы для сообщений
+export interface Message {
+    success: string;
+    error: string;
+    info: string;
+    warning: string;
+}
+

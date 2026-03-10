@@ -5,27 +5,11 @@ import About from "./About";
 import Arrow from "@/app/_Components/Arrow/arrow";
 import Button from "@/app/_Components/Button/button";
 import Image from 'next/image';
+import { onboardingSlides } from '@/app/MocData';
 
 export default function OnboardingPage() {
     const [currentSlide, setCurrentSlide] = useState(0);
-
-    const slides = [
-        {
-            id: 1,
-            image: '/onboarding-1.jpg',
-            alt: 'Тренировка 1'
-        },
-        {
-            id: 2,
-            image: '/onboarding-2.jpg',
-            alt: 'Тренировка 2'
-        },
-        {
-            id: 3,
-            image: '/onboarding-3.jpg',
-            alt: 'Тренировка 3'
-        },
-    ];
+    const slides = onboardingSlides;
 
     const nextSlide = () => {
         setCurrentSlide((prev) => (prev + 1) % slides.length);
@@ -42,9 +26,7 @@ export default function OnboardingPage() {
     return (
         <main className="min-h-screen bg-main">
             <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-8">
-                {/* Секция с фотографиями */}
                 <div className="relative mb-6">
-                    {/* Основное изображение */}
                     <div className="relative w-full h-[500px] md:h-[600px] rounded-3xl overflow-hidden shadow-custom">
                         <Image
                             src={slides[currentSlide].image}
@@ -53,12 +35,9 @@ export default function OnboardingPage() {
                             className="object-cover"
                             priority
                         />
-
-                        {/* About с текущим слайдом */}
                         <About currentSlide={currentSlide} />
                     </div>
 
-                    {/* Стрелка влево */}
                     <div className="absolute left-4 top-1/2 -translate-y-1/2 z-30">
                         <Arrow
                             direction="left"
@@ -68,7 +47,6 @@ export default function OnboardingPage() {
                         />
                     </div>
 
-                    {/* Стрелка вправо */}
                     <div className="absolute right-4 top-1/2 -translate-y-1/2 z-30">
                         <Arrow
                             direction="right"
@@ -79,7 +57,6 @@ export default function OnboardingPage() {
                     </div>
                 </div>
 
-                {/* Пагинация */}
                 <div className="flex justify-center gap-3 mb-8">
                     {slides.map((_, index) => (
                         <button
@@ -94,7 +71,6 @@ export default function OnboardingPage() {
                     ))}
                 </div>
 
-                {/* Кнопки */}
                 <div className="flex flex-col sm:flex-row gap-4 justify-center items-center max-w-md mx-auto p-2">
                     <Button
                         text="Вход"

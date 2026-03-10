@@ -23,6 +23,7 @@ export default function ReportsPage() {
   const [reportType, setReportType] = useState<ReportType>('simple');
   const [period, setPeriod] = useState<PeriodType>('month');
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [showMessage, setShowMessage] = useState<string | null>(null);
 
   const [stats, setStats] = useState({
     workouts: mockData.report.totalWorkouts,
@@ -52,7 +53,7 @@ export default function ReportsPage() {
   const periodOptions = [
     { value: 'month', label: 'Месяц' },
     { value: 'twoMonths', label: 'Два месяца' },
-    { value: 'quarter', label: 'Квартал' },
+    // { value: 'quarter', label: 'Квартал' }, // удалено
   ];
 
   const categoryOptions = [
@@ -128,22 +129,22 @@ export default function ReportsPage() {
         previous: [5, 8, 10, 6, 7, 9, 8, 10],
         periodLabel: 'Февраль - Март 2024'
       });
-    } else {
-      setChartData({
-        labels: ['1 нед', '2 нед', '3 нед', '4 нед', '5 нед', '6 нед', '7 нед', '8 нед', '9 нед', '10 нед', '11 нед', '12 нед'],
-        current: [7, 12, 8, 15, 10, 14, 9, 11, 13, 16, 12, 18],
-        previous: [5, 8, 10, 6, 7, 9, 8, 10, 11, 12, 9, 13],
-        periodLabel: 'Январь - Март 2024'
-      });
-    }
+    } // Удален блок для quarter
   }, [reportType, period, selectedCategories]);
 
   return (
     <div className="min-h-screen bg-main">
       <div className="w-full px-3 sm:px-4 md:px-6 lg:px-8 py-9">
         <div className="max-w-7xl mx-auto space-y-8 sm:space-y-10 lg:space-y-12">
+          
+          {showMessage && (
+            <div className="p-3 bg-blue-100 border border-blue-500 rounded-2xl text-blue-700 text-sm text-center">
+              {showMessage}
+            </div>
+          )}
+          
           <div className=" lg:flex lg:items-center lg:gap-4">
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 gap-0 w-full lg:flex-1">
+            <div className="flex flex-col sm:flex-row gap-3 w-full lg:flex-1">
               <div className="min-w-0">
                 <Filter
                   options={reportOptions.map(opt => opt.label)}
@@ -170,14 +171,14 @@ export default function ReportsPage() {
                 <MultiSelectFilter
                   options={categoryOptions}
                   onSelect={setSelectedCategories}
-                  buttonText="Категория"
+                  buttonText="Категория упражнения"
                   maxDisplay={1}
                 />
               </div>
             </div>
 
             <div className="flex justify-center mt-4 lg:mt-0 lg:flex-shrink-0">
-              <ExportButton />
+              <ExportButton setShowMessage={setShowMessage} />
             </div>
           </div>
 
@@ -199,8 +200,6 @@ export default function ReportsPage() {
                   labels={chartData.labels}
                   currentData={chartData.current}
                   previousData={chartData.previous || []}
-                  currentLabel="Текущий"
-                  previousLabel="Прошлый"
                 />
               )}
             </div>
@@ -229,6 +228,6 @@ export default function ReportsPage() {
           </div>
         </div>
       </div>
-    </div >
+    </div>
   );
 }

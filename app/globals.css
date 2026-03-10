@@ -101,3 +101,13 @@ body {
   width: 100%;
   margin: 0 auto;
 }
+
+/* Скрываем скроллбар но оставляем функциональность */
+.scrollbar-hide {
+    -ms-overflow-style: none;  /* IE и Edge */
+    scrollbar-width: none;     /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;  /* Chrome, Safari, Opera */
+}

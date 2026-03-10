@@ -1,12 +1,19 @@
 "use client";
 
 import Button from "@/app/_Components/Button/button";
+import { messages } from '@/app/MocData';
 
-export default function ExportButton() {
+interface ExportButtonProps {
+  setShowMessage?: (message: string | null) => void;
+}
+
+export default function ExportButton({ setShowMessage }: ExportButtonProps) {
   const handleExport = () => {
-    // В реальном приложении здесь будет генерация PDF
+    if (setShowMessage) {
+      setShowMessage(messages.info.exportFeature);
+      setTimeout(() => setShowMessage(null), 3000);
+    }
     console.log('Экспорт отчета в PDF');
-    alert('Функция экспорта в PDF будет доступна в ближайшее время');
   };
 
   return (

@@ -14,7 +14,6 @@ export default function PeriodFilter({ value, onChange }: PeriodFilterProps) {
   const options = [
     { value: 'month', label: 'Месяц' },
     { value: 'twoMonths', label: 'Два месяца' },
-    { value: 'quarter', label: 'Квартал' },
   ];
 
   const selectedLabel = options.find(opt => opt.value === value)?.label || options[0].label;

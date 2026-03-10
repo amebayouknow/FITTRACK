@@ -1,36 +1,21 @@
 "use client";
 
 import Logo from "@/app/_Components/Logo/logo";
+import { aboutData } from '@/app/MocData';
 
 interface AboutProps {
     currentSlide: number;
 }
 
 export default function About({ currentSlide }: AboutProps) {
-    const aboutData = [
-        {
-            description: "Следи за нагрузкой, ставь рекорды и смотри на свою форму в цифрах. Мы превратим сухие данные в твои достижения.",
-            accentWidth: "w-full",
-            warningWidth: "w-32"
-        },
-        {
-            description: "Отслеживай свои тренировки, устанавливай новые рекорды и наблюдай за улучшением своих результатов день за днем.",
-            accentWidth: "w-full",
-            warningWidth: "w-32"
-        },
-        {
-            description: "Получай персональные рекомендации на основе твоих данных. Наша система поможет тебе достичь целей быстрее и эффективнее.",
-            accentWidth: "w-full",
-            warningWidth: "w-32"
-        }
-    ];
-
     const data = aboutData[currentSlide];
 
     return (
         <div className="absolute p-8 left-0 md:left-20 top-1/2 -translate-y-1/2 z-20 max-w-md w-full pointer-events-none">
             <div className="bg-white/90 backdrop-blur-sm p-6 rounded-4xl shadow-lg pointer-events-auto">
-                <Logo disableLink={true}/>
+                <div className="mb-4">
+                    <Logo disableLink={true} />
+                </div>
                 <p className="text-base text-primary leading-relaxed mb-6 text-center sm:text-left">
                     {data.description}
                 </p>

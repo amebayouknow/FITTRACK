@@ -96,6 +96,7 @@ export default function ProgressRing({ completed = 5, total = 4, size = 250, str
             <Button
                 text='Добавить тренировку'
                 variant='primary'
+                href='/workout'
             />
         </div>
     );
