@@ -8,7 +8,7 @@ exports.getCategories = async (req, res) => {
     status: 200,
   };
 
-  const sql = "select * from category";
+  const sql = "select name from category";
   db.query(sql, async (err, result) => {
     try {
       if (result.length === 0) {

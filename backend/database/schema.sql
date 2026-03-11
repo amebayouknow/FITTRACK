@@ -32,6 +32,8 @@ CREATE TABLE `category` (
   KEY `user_id` (`user_id`),
   CONSTRAINT `category_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+INSERT INTO `category` (name) values ('бег'), ('растяжка'), ('пилатес'), ('йога'), ('кардио'), ('скакалка'), ('велосипед');
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -72,6 +74,7 @@ CREATE TABLE `profile` (
   `height` int DEFAULT NULL,
   `sex` varchar(255) DEFAULT NULL,
   `age` int DEFAULT NULL,
+  `goal` int DEFAULT NULL,
   PRIMARY KEY (`profile_id`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `profile_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -110,7 +113,6 @@ CREATE TABLE `user` (
   `user_id` varchar(255) NOT NULL,
   `email` varchar(255) DEFAULT NULL,
   `password_hash` text,
-  `goal` int DEFAULT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
