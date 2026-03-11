@@ -6,6 +6,8 @@ import ScheduledWorkouts from './_component/plan';
 import { mockData } from '@/app/MocData';
 import type { ScheduledWorkout } from '@/app/index';
 import ExportButton from '../report/_components/ExportButton/ExportButton';
+import ExportWorkout from '@/app/_Components/Export/ExportWorkout/ExportWorkout';
+
 
 export default function WorkoutPage() {
   const [workouts, setWorkouts] = useState<ScheduledWorkout[]>(mockData.scheduledWorkouts);
@@ -79,7 +81,11 @@ export default function WorkoutPage() {
               </div>
             )}
             <div className="mt-4 lg:mt-10 lg:flex-shrink-0">
-              <ExportButton />
+              <ExportWorkout 
+                        workouts={filteredWorkouts.length > 0 ? filteredWorkouts : workouts}
+                        selectedDate={selectedDate || undefined}
+                    />
+                    
             </div>
           </div>
         </div>

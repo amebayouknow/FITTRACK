@@ -349,22 +349,22 @@ export default function ProfilePage() {
             <h3 className="text-xl font-bold text-primary text-center mb-4">Выберите пол</h3>
             <div className="space-y-2">
               <button 
-                onClick={() => selectGender('male')} 
+                onClick={() => selectGender('мужчинка')} 
                 className="w-full px-6 py-4 rounded-2xl border-2 border-accent hover:bg-accent/10 transition-all duration-300 text-left text-primary font-medium"
               >
-                Мужской
+                Мужчинка
               </button>
               <button 
-                onClick={() => selectGender('female')} 
+                onClick={() => selectGender('женщинка')} 
                 className="w-full px-6 py-4 rounded-2xl border-2 border-accent hover:bg-accent/10 transition-all duration-300 text-left text-primary font-medium"
               >
-                Женский
+                Женщинка
               </button>
               <button 
-                onClick={() => selectGender('other')} 
+                onClick={() => selectGender('не определился')} 
                 className="w-full px-6 py-4 rounded-2xl border-2 border-accent hover:bg-accent/10 transition-all duration-300 text-left text-primary font-medium"
               >
-                Другой
+                Не определился
               </button>
             </div>
             <button 
@@ -419,7 +419,7 @@ export default function ProfilePage() {
                 onChange={setConfirmDelete} 
               />
             </div>
-            <div className="flex gap-3">
+            <div className="flex gap-3 aling-center">
               <div className="flex-1">
                 <Button text="Отмена" variant="text" onClick={() => setShowDeleteModal(false)} />
               </div>
