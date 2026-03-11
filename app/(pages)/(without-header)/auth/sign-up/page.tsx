@@ -17,7 +17,7 @@ export default function SignUpPage() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isAgreed, setIsAgreed] = useState(false);
   const [errors, setErrors] = useState({
-    email: '',
+    email: '',  
     password: '',
     confirmPassword: '',
     agreement: ''
