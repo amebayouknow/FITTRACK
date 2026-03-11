@@ -43,7 +43,7 @@ exports.createProfile = (req, res) => {
         };
 
       } catch (err) {
-
+        console.log(err);
         response.success = false;
         response.message = "Server error";
         response.status = 500;
