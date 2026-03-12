@@ -12,6 +12,7 @@ interface ProgressRingProps {
 }
 
 export default function ProgressRing({ completed = 5, total = 4, size = 250, strokeWidth = 20, innerCircleSize = 150 }: ProgressRingProps) {
+
     const [progress, setProgress] = useState(0);
     const [overProgress, setOverProgress] = useState(0);
 

@@ -238,3 +238,52 @@ exports.updatePassword = async (req, res) => {
     return res.status(response.status).json(response);
   }
 };
+
+exports.getUser = (req, res) => {
+  const { email } = req.body;
+
+  let response = {
+    message: "User successfully received",
+    success: true,
+    body: null,
+    status: 200,
+  };
+
+  try {
+    if (!email) {
+      response.success = false;
+      response.message = "email is required";
+      response.status = 400;
+      return res.status(400).json(response);
+    }
+
+    const sql = `SELECT user_id FROM user WHERE email = ?`;
+
+    db.query(sql, [email], (err, result) => {
+      try {
+        if (err) {
+          throw new Error();
+        }
+
+        if (!result || result.length === 0) {
+          response.status = 400;
+          response.success = false;
+          response.message = "User not found";
+        } else {
+          response.body = result[0];
+        }
+      } catch (err) {
+        response.success = false;
+        response.message = "Server error";
+        response.status = response.status === 200 ? 500 : response.status;
+      } finally {
+        return res.status(response.status).json(response);
+      }
+    });
+  } catch (err) {
+    response.success = false;
+    response.message = "Server error";
+    response.status = 500;
+    return res.status(response.status).json(response);
+  }
+};
