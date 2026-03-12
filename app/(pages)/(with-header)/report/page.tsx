@@ -53,7 +53,6 @@ export default function ReportsPage() {
   const periodOptions = [
     { value: 'month', label: 'Месяц' },
     { value: 'twoMonths', label: 'Два месяца' },
-    // { value: 'quarter', label: 'Квартал' }, // удалено
   ];
 
   const categoryOptions = [
@@ -129,7 +128,7 @@ export default function ReportsPage() {
         previous: [5, 8, 10, 6, 7, 9, 8, 10],
         periodLabel: 'Февраль - Март 2024'
       });
-    } // Удален блок для quarter
+    }
   }, [reportType, period, selectedCategories]);
 
   return (
@@ -143,7 +142,7 @@ export default function ReportsPage() {
             </div>
           )}
           
-          <div className=" lg:flex lg:items-center lg:gap-4">
+          <div className="lg:flex lg:items-center lg:gap-4">
             <div className="flex flex-col sm:flex-row gap-3 w-full lg:flex-1">
               <div className="min-w-0">
                 <Filter
@@ -171,14 +170,18 @@ export default function ReportsPage() {
                 <MultiSelectFilter
                   options={categoryOptions}
                   onSelect={setSelectedCategories}
-                  buttonText="Категория упражнения"
+                  buttonText="Категория"
                   maxDisplay={1}
                 />
               </div>
             </div>
 
             <div className="flex justify-center mt-4 lg:mt-0 lg:flex-shrink-0">
-              <ExportButton setShowMessage={setShowMessage} />
+              <ExportButton 
+                reportData={chartData}
+                stats={stats}
+                reportType={reportType}
+              />
             </div>
           </div>
 

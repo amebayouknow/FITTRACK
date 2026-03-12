@@ -18,6 +18,16 @@ export default function ProfilePage() {
   const [height, setHeight] = useState('');
   const [weight, setWeight] = useState('');
 
+  // Состояния для ошибок валидации
+  const [errors, setErrors] = useState({
+    goal: '',
+    gender: '',
+    age: '',
+    height: '',
+    weight: '',
+    general: ''
+  });
+
   // Состояние для режима редактирования
   const [isEditing, setIsEditing] = useState(false);
 
@@ -31,6 +41,10 @@ export default function ProfilePage() {
   // Состояния для смены пароля
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordErrors, setPasswordErrors] = useState({
+    newPassword: '',
+    confirmPassword: ''
+  });
 
   // Состояние для подтверждения удаления
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -54,7 +68,76 @@ export default function ProfilePage() {
     router.push('/onboarding');
   };
 
+  const validateProfile = () => {
+    const newErrors = {
+      goal: '',
+      gender: '',
+      age: '',
+      height: '',
+      weight: '',
+      general: ''
+    };
+    let isValid = true;
+
+    // Валидация цели (необязательное поле, но если заполнено - проверяем)
+    if (goal && goal.length > 2) {
+      newErrors.goal = 'Цель не должна превышать 2 символов';
+      isValid = false;
+    }
+
+    // Валидация пола
+    if (!gender) {
+      newErrors.gender = 'Выберите пол';
+      isValid = false;
+    }
+
+    // Валидация возраста
+    if (!age) {
+      newErrors.age = 'Введите возраст';
+      isValid = false;
+    } else {
+      const ageNum = parseInt(age);
+      if (isNaN(ageNum) || ageNum < 1 || ageNum > 100) {
+        newErrors.age = 'Введите корректный возраст (1-100)';
+        isValid = false;
+      }
+    }
+
+    // Валидация роста
+    if (!height) {
+      newErrors.height = 'Введите рост';
+      isValid = false;
+    } else {
+      const heightNum = parseInt(height);
+      if (isNaN(heightNum) || heightNum < 50 || heightNum > 250) {
+        newErrors.height = 'Введите корректный рост (50-250 см)';
+        isValid = false;
+      }
+    }
+
+    // Валидация веса
+    if (!weight) {
+      newErrors.weight = 'Введите вес';
+      isValid = false;
+    } else {
+      const weightNum = parseInt(weight);
+      if (isNaN(weightNum) || weightNum < 20 || weightNum > 300) {
+        newErrors.weight = 'Введите корректный вес (20-300 кг)';
+        isValid = false;
+      }
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
   const handleSaveChanges = () => {
+    if (!validateProfile()) {
+      setShowMessage({type: 'error', text: 'Проверьте правильность заполнения полей'});
+      setTimeout(() => setShowMessage(null), 3000);
+      return;
+    }
+
     const profileData = {
       goal,
       gender,
@@ -85,25 +168,54 @@ export default function ProfilePage() {
       setHeight('');
       setWeight('');
     }
+    // Сбрасываем ошибки
+    setErrors({
+      goal: '',
+      gender: '',
+      age: '',
+      height: '',
+      weight: '',
+      general: ''
+    });
     setIsEditing(false);
   };
 
+  // Валидация пароля
+  const validatePassword = () => {
+    const newErrors = {
+      newPassword: '',
+      confirmPassword: ''
+    };
+    let isValid = true;
+
+    if (!newPassword) {
+      newErrors.newPassword = 'Введите новый пароль';
+      isValid = false;
+    } else if (newPassword.length < 6) {
+      newErrors.newPassword = 'Пароль должен быть не менее 6 символов';
+      isValid = false;
+    } else if (!/[A-Z]/.test(newPassword)) {
+      newErrors.newPassword = 'Пароль должен содержать хотя бы одну заглавную букву';
+      isValid = false;
+    } else if (!/[0-9]/.test(newPassword)) {
+      newErrors.newPassword = 'Пароль должен содержать хотя бы одну цифру';
+      isValid = false;
+    }
+
+    if (!confirmPassword) {
+      newErrors.confirmPassword = 'Подтвердите пароль';
+      isValid = false;
+    } else if (newPassword !== confirmPassword) {
+      newErrors.confirmPassword = 'Пароли не совпадают';
+      isValid = false;
+    }
+
+    setPasswordErrors(newErrors);
+    return isValid;
+  };
+
   const handleChangePassword = () => {
-    if (!newPassword || !confirmPassword) {
-      setShowMessage({type: 'error', text: messages.error.fillAllFields});
-      setTimeout(() => setShowMessage(null), 3000);
-      return;
-    }
-
-    if (newPassword.length < 6) {
-      setShowMessage({type: 'error', text: messages.error.passwordLength});
-      setTimeout(() => setShowMessage(null), 3000);
-      return;
-    }
-
-    if (newPassword !== confirmPassword) {
-      setShowMessage({type: 'error', text: messages.error.passwordMatch});
-      setTimeout(() => setShowMessage(null), 3000);
+    if (!validatePassword()) {
       return;
     }
 
@@ -114,6 +226,7 @@ export default function ProfilePage() {
     setShowPasswordModal(false);
     setNewPassword('');
     setConfirmPassword('');
+    setPasswordErrors({ newPassword: '', confirmPassword: '' });
     setShowMessage({type: 'success', text: messages.success.passwordChanged});
     setTimeout(() => setShowMessage(null), 3000);
   };
@@ -136,6 +249,7 @@ export default function ProfilePage() {
 
   const selectGender = (selected: string) => {
     setGender(selected);
+    setErrors(prev => ({ ...prev, gender: '' }));
     setShowGenderModal(false);
   };
 
@@ -222,69 +336,96 @@ export default function ProfilePage() {
             <div className="w-full max-w-md lg:max-w-lg space-y-4">
 
               {/* Цель на неделю */}
-              <InputField
-                type="text"
-                hint="Цель на неделю"
-                value={goal}
-                onChange={setGoal}
-                disabled={!isEditing}
-                autoComplete="off"
-              />
+              <div>
+                <InputField
+                  type="text"
+                  hint="Цель на неделю"
+                  value={goal}
+                  onChange={setGoal}
+                  disabled={!isEditing}
+                  autoComplete="off"
+                />
+                {isEditing && errors.goal && (
+                  <p className="text-xs text-warning mt-1">{errors.goal}</p>
+                )}
+              </div>
 
               {/* Пол */}
-              <button
-                onClick={() => isEditing && setShowGenderModal(true)}
-                disabled={!isEditing}
-                className={`w-full border-2 border-accent rounded-2xl px-7 py-3 text-left text-secondary bg-white transition-all duration-300 flex items-center justify-between
-                  ${!isEditing ? 'opacity-50 cursor-not-allowed' : 'hover:bg-accent/5'}`}
-              >
-                <span>{gender || 'Пол'}</span>
-                {isEditing && (
-                  <svg
-                    className="w-5 h-5 text-accent"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M19 9l-7 7-7-7"
-                    />
-                  </svg>
+              <div>
+                <button
+                  onClick={() => isEditing && setShowGenderModal(true)}
+                  disabled={!isEditing}
+                  className={`w-full border-2 border-accent rounded-2xl px-7 py-3 text-left text-secondary bg-white transition-all duration-300 flex items-center justify-between
+                    ${!isEditing ? 'opacity-50 cursor-not-allowed' : 'hover:bg-accent/5'}
+                    ${errors.gender && isEditing ? 'border-warning' : ''}
+                  `}
+                >
+                  <span>{gender || 'Пол'}</span>
+                  {isEditing && (
+                    <svg
+                      className="w-5 h-5 text-accent"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
+                  )}
+                </button>
+                {isEditing && errors.gender && (
+                  <p className="text-xs text-warning mt-1">{errors.gender}</p>
                 )}
-              </button>
+              </div>
 
               {/* Возраст */}
-              <InputField
-                type="number"
-                hint="Возраст"
-                value={age}
-                onChange={setAge}
-                disabled={!isEditing}
-                autoComplete="off"
-              />
+              <div>
+                <InputField
+                  type="number"
+                  hint="Возраст"
+                  value={age}
+                  onChange={setAge}
+                  disabled={!isEditing}
+                  autoComplete="off"
+                />
+                {isEditing && errors.age && (
+                  <p className="text-xs text-warning mt-1">{errors.age}</p>
+                )}
+              </div>
 
               {/* Рост */}
-              <InputField
-                type="number"
-                hint="Рост (см)"
-                value={height}
-                onChange={setHeight}
-                disabled={!isEditing}
-                autoComplete="off"
-              />
+              <div>
+                <InputField
+                  type="number"
+                  hint="Рост (см)"
+                  value={height}
+                  onChange={setHeight}
+                  disabled={!isEditing}
+                  autoComplete="off"
+                />
+                {isEditing && errors.height && (
+                  <p className="text-xs text-warning mt-1">{errors.height}</p>
+                )}
+              </div>
 
               {/* Вес */}
-              <InputField
-                type="number"
-                hint="Вес (кг)"
-                value={weight}
-                onChange={setWeight}
-                disabled={!isEditing}
-                autoComplete="off"
-              />
+              <div>
+                <InputField
+                  type="number"
+                  hint="Вес (кг)"
+                  value={weight}
+                  onChange={setWeight}
+                  disabled={!isEditing}
+                  autoComplete="off"
+                />
+                {isEditing && errors.weight && (
+                  <p className="text-xs text-warning mt-1">{errors.weight}</p>
+                )}
+              </div>
 
               {/* Кнопки редактирования */}
               {isEditing && (
@@ -349,19 +490,19 @@ export default function ProfilePage() {
             <h3 className="text-xl font-bold text-primary text-center mb-4">Выберите пол</h3>
             <div className="space-y-2">
               <button 
-                onClick={() => selectGender('male')} 
+                onClick={() => selectGender('мужской')} 
                 className="w-full px-6 py-4 rounded-2xl border-2 border-accent hover:bg-accent/10 transition-all duration-300 text-left text-primary font-medium"
               >
                 Мужской
               </button>
               <button 
-                onClick={() => selectGender('female')} 
+                onClick={() => selectGender('женский')} 
                 className="w-full px-6 py-4 rounded-2xl border-2 border-accent hover:bg-accent/10 transition-all duration-300 text-left text-primary font-medium"
               >
                 Женский
               </button>
               <button 
-                onClick={() => selectGender('other')} 
+                onClick={() => selectGender('другой')} 
                 className="w-full px-6 py-4 rounded-2xl border-2 border-accent hover:bg-accent/10 transition-all duration-300 text-left text-primary font-medium"
               >
                 Другой
@@ -383,20 +524,30 @@ export default function ProfilePage() {
           <div className="bg-stone rounded-3xl p-6 w-full max-w-sm mx-4">
             <h3 className="text-xl font-bold text-primary text-center mb-4">Изменить пароль</h3>
             <div className="space-y-3">
-              <InputField 
-                type="password" 
-                hint="Новый пароль" 
-                value={newPassword} 
-                onChange={setNewPassword}
-                autoComplete="new-password"
-              />
-              <InputField 
-                type="password" 
-                hint="Подтвердите пароль" 
-                value={confirmPassword} 
-                onChange={setConfirmPassword}
-                autoComplete="new-password"
-              />
+              <div>
+                <InputField 
+                  type="password" 
+                  hint="Новый пароль" 
+                  value={newPassword} 
+                  onChange={setNewPassword}
+                  autoComplete="new-password"
+                />
+                {passwordErrors.newPassword && (
+                  <p className="text-xs text-warning mt-1">{passwordErrors.newPassword}</p>
+                )}
+              </div>
+              <div>
+                <InputField 
+                  type="password" 
+                  hint="Подтвердите пароль" 
+                  value={confirmPassword} 
+                  onChange={setConfirmPassword}
+                  autoComplete="new-password"
+                />
+                {passwordErrors.confirmPassword && (
+                  <p className="text-xs text-warning mt-1">{passwordErrors.confirmPassword}</p>
+                )}
+              </div>
             </div>
             <div className="flex flex-col gap-3 mt-4">
               <Button text="Отмена" variant="text" onClick={() => setShowPasswordModal(false)} />
