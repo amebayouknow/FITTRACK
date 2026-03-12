@@ -121,7 +121,7 @@ export default function AddWorkoutModal({
 
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50 lg:max-w-5lx">
-            <div className="bg-stone rounded-3xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="bg-stone rounded-3xl max-w-5xl max-h-[90vh] overflow-y-auto">
                 <h1 className='flex flex-center text-center text-3xl p-5 text-accent'>Новая Тренировка</h1>
                 {/* Дата и время сверху */}
                 <div className="p-6 border-b border-secondary/20">

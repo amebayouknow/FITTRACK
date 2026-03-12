@@ -91,3 +91,16 @@ export interface Message {
     warning: string;
 }
 
+export interface ScheduledExercise {
+    id: number;
+    name: string;
+    type: string;
+}
+
+export interface ScheduledWorkout {
+    id: number;
+    date: string;
+    time: string;
+    exercises: ScheduledExercise[];
+    completed?: boolean;
+}
