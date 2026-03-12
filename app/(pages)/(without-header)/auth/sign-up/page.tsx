@@ -43,6 +43,11 @@ export default function SignUpPage() {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+
+    if (isLoading) {
+      return;
+    }
+
     setIsLoading(true);
     const valid = validateForm(form);
 
@@ -57,8 +62,8 @@ export default function SignUpPage() {
         });
         const data: IServerResponse = await res.json();
         if (data.success) {
-          router.push("/auth/sign-in")
-          console.log("Успех")
+          router.push("/auth/sign-in");
+          console.log("Успех");
         } else {
           throw new Error(data.message);
         }

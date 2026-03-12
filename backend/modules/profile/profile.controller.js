@@ -129,7 +129,7 @@ exports.getProfile = (req, res) => {
 
 exports.updateProfile = async (req, res) => {
   const { user_id, name, weight, height, sex, age , goal} = req.body;
-
+  
   let response = {
     message: "Profile updated",
     success: true,
@@ -151,7 +151,7 @@ exports.updateProfile = async (req, res) => {
       response.message = "Нет полей для обновления";
       throw new Error();
     }
-
+    
     const set = [];
     const values = [];
 
@@ -198,12 +198,12 @@ exports.updateProfile = async (req, res) => {
 
     return res.status(response.status).json(response);
   } catch (err) {
+    // console.log(err)
     if (response.message === "Profile updated") {
       response.message = "Server Error";
       response.status = 500;
       response.success = false;
     }
-
     return res.status(response.status).json(response);
   }
 };

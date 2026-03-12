@@ -1,3 +1,4 @@
+import { cookies } from "next/headers";
 import View from "./view";
 
 interface IExercises{
@@ -15,22 +16,19 @@ interface ITraining{
 }
 
 export default async function Page() {
+  const cookieStore = cookies();
+  const user_id = (await cookieStore).get("user_id")?.value;
+
   try {
-    // console.log("request")
-    const ServerResponseTraining = await fetch("http://localhost:3000/api/trainings", {
+    const ServerResponseTraining = await fetch(`http://localhost:3000/api/trainings?id=${user_id}`, {
       method: "GET",
       headers: {
         "Content-type": "application/json",
       },
     });
     const Trainings: ITraining[] = await ServerResponseTraining.json();
-
-    data = await list.json()
-    console.log(data)
-    
-    // console.log("request yeap")
   } catch (error) {
-    data = null;
+    console.log("error")
   }
 
   return <View />;

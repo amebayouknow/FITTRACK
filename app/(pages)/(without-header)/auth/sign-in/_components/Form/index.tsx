@@ -1,9 +1,16 @@
 import Button from "@/app/_Components/Button/button";
 import InputField from "@/app/_Components/Input/input";
 import Logo from "@/app/_Components/Logo/logo";
+import { IServerResponse } from "@/app/api/types";
+import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction, useState } from "react";
 
-export default function Form({setStep}: {setStep: Dispatch<SetStateAction<'login' | 'request' | 'reset'>>}) {
+export default function Form({
+  setStep,
+}: {
+  setStep: Dispatch<SetStateAction<"login" | "request" | "reset">>;
+}) {
+  const router = useRouter();
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -20,16 +27,37 @@ export default function Form({setStep}: {setStep: Dispatch<SetStateAction<'login
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    console.log("test");
+    if (isLoading) {
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const ServerResponse = await fetch("/api/auth/sign-in", {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify(form),
+      });
+      const data: IServerResponse<string> = await ServerResponse.json();
+      if (data.success && data.body) {
+        router.push("/home")
+      } else {
+        setShowMessage(data.message);
+        throw new Error(data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
+    }
   };
 
   return (
     <div className="min-h-screen py-6 sm:py-9 bg-stone md:bg-main">
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <form
-          onSubmit={handleSubmit}
-          className="bg-stone md:[box-shadow:0_0_20px_10px_rgba(249,115,22,0.25)] lg:rounded-3xl p-5 sm:p-6 md:p-8"
-        >
+        <div className="bg-stone md:[box-shadow:0_0_20px_10px_rgba(249,115,22,0.25)] lg:rounded-3xl p-5 sm:p-6 md:p-8">
           {/* Логотип */}
           <div className="flex justify-start mb-6 md:mb-8">
             <Logo disableLink={true} />
@@ -66,10 +94,19 @@ export default function Form({setStep}: {setStep: Dispatch<SetStateAction<'login
                     type="password"
                     hint="Пароль"
                     value={form.password}
+                    name="password"
                     onChange={handleChange}
                     autoComplete="current-password"
                   />
                 </div>
+                {showMessage && (
+                  <div
+                    style={{ background: "red", color: "white" }}
+                    className="mb-4 p-3 border border-rose-500 rounded-2xl text-sm text-center"
+                  >
+                    {showMessage}
+                  </div>
+                )}
 
                 <Button
                   text={isLoading ? "Вход..." : "Войти"}
@@ -107,7 +144,7 @@ export default function Form({setStep}: {setStep: Dispatch<SetStateAction<'login
               </div>
             </div>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );
