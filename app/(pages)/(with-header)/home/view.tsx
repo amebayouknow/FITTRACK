@@ -3,8 +3,9 @@
 import ProgressRing from "./_components/ProgressRing";
 import StatsTable from "./_components/StatsTable";
 import WorkoutTable from "./_components/WorkoutTable";
+import { ITraining } from "./page";
 
-export default function View(){
+export default function View({trainings} : {trainings: ITraining}){
         return (
             <div className="min-h-screen px-2 sm:px-4 py-9">
                 <div className="xs:max-w-xs sm:max-w-2xl md:max-w-3xl lg:max-w-5xl xl:max-w-7xl mx-auto ">

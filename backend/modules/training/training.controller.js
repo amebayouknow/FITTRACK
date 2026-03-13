@@ -72,7 +72,6 @@ const db = require("../../database/db");
 
 exports.addTraining = async (req, res) => {
   const { user_id, date, duration, exercises } = req.body;
-  console.log("test")
   let response = {
     message: "Training created",
     success: true,

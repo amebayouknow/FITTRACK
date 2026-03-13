@@ -222,7 +222,7 @@ export default function AddWorkoutModal({
                                     type="text"
                                     hint="Введите название упражнения"
                                     value={newExerciseName}
-                                    onChange={setNewExerciseName}
+                                    onChange={(e) => setNewExerciseName(e.target.value)}
                                 />
                             )}
 
@@ -232,13 +232,13 @@ export default function AddWorkoutModal({
                                     type="text"
                                     hint="Длительность"
                                     value={newExerciseDuration}
-                                    onChange={setNewExerciseDuration}
+                                    onChange={(e) => setNewExerciseDuration(e.target.value)}
                                 />
                                 <InputField
                                     type="text"
                                     hint="Кол-во/дист."
                                     value={newExerciseDistance}
-                                    onChange={setNewExerciseDistance}
+                                    onChange={(e) => setNewExerciseDistance(e.target.value)}
                                 />
                             </div>
 

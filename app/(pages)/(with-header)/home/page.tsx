@@ -1,14 +1,14 @@
 import { cookies } from "next/headers";
 import View from "./view";
 
-interface IExercises{
+export interface IExercises{
     category: string,
     duration: number,
     exercise_id: number,
     parameters: number
 }
 
-interface ITraining{
+export interface ITraining{
     training_id: number,
     date: string;
     duration: number;
